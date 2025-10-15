@@ -1,0 +1,5 @@
+{
+  "name": "Craffteine Assistant Chatbot",
+  "description": "A dynamic, interactive product configurator chatbot integrated into a Shopify store. It guides users step-by-step through the creation of a custom energy blend using Gemini for conversational AI.",
+  "requestFramePermissions": []
+}
