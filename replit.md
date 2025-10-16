@@ -4,7 +4,16 @@
 
 The Craffteine Assistant is an AI-powered chatbot for creating personalized energy supplement blends. It guides users through a structured conversation to configure their custom formula by selecting format, ingredients, dosage, and naming their blend. The application is built as a standalone React app that can be embedded into a Shopify store, providing an interactive product configurator experience.
 
-**Current Status:** Successfully deployed and running on Replit with OpenAI integration.
+**Current Status:** Successfully configured and running on Replit with OpenAI integration.
+
+## Recent Changes (October 16, 2025)
+
+- Fixed TypeScript configuration by adding `vite-env.d.ts` for environment variable types
+- Configured Vite with `allowedHosts: true` to support Replit's dynamic proxy hostnames
+- Created missing `index.css` file for base styles
+- Installed all required npm dependencies
+- Set up development workflow on port 5000
+- Configured autoscale deployment with build and preview commands
 
 ## User Preferences
 
@@ -16,14 +25,16 @@ Preferred communication style: Simple, everyday language.
 - `VITE_OPENAI_API_KEY`: OpenAI API key for AI-powered conversation (configured in Replit Secrets)
 
 **Development:**
-- Development server runs on port 5000
-- Uses Vite with HMR (hot module replacement)
-- Configured to work with Replit's proxy environment
+- Development server runs on port 5000 (host: 0.0.0.0)
+- Uses Vite with HMR configured for Replit's proxy environment
+- `allowedHosts: true` configured to work with Replit's dynamic hostnames
+- HMR WebSocket errors in browser console are expected and don't affect functionality
 
 **Deployment:**
 - Configured for autoscale deployment
 - Build command: `npm run build`
 - Run command: `npx vite preview --host 0.0.0.0`
+- Preview server also configured with `allowedHosts: true`
 
 ## System Architecture
 
