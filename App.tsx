@@ -6,7 +6,7 @@ import { Message, Formula } from './types';
 import { SparklesIcon } from './components/icons/SparklesIcon';
 
 // This key is for demonstration. In a production app, this should be handled securely on a backend.
-const OPENAI_API_KEY =import.meta.env.VITE_OPENAI_API_KEY ;
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 
 const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,12 +45,7 @@ const App: React.FC = () => {
     const response = await getNextStep(OPENAI_API_KEY, [], {});
     
     if (response) {
-      const firstQuestion: Message = {
-        id: Date.now().toString(),
-        sender: 'bot',
-        ...response,
-      };
-      setMessages(prev => [...prev, firstQuestion]);
+      setMessages(prev => [...prev, response]);
     } else {
        const errorMessage: Message = {
         id: Date.now().toString(),
@@ -99,12 +94,7 @@ const App: React.FC = () => {
             setMessages(prev => [...prev, finalMessage]);
 
         } else {
-            const nextQuestion: Message = {
-                id: Date.now().toString(),
-                sender: 'bot',
-                ...response,
-            };
-            setMessages(prev => [...prev, nextQuestion]);
+            setMessages(prev => [...prev, response]);
         }
     } else {
         const errorMessage: Message = {
