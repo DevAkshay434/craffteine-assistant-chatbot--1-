@@ -1,11 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
-// https://vitejs.dev/config/
+// ✅ Fix for __dirname in ESM environments (like Replit)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 5000,
     allowedHosts: true,
     hmr: {
@@ -16,7 +20,15 @@ export default defineConfig({
     allowedHosts: true,
   },
   build: {
-    // Output assets to a subfolder to keep the dist directory clean
-    assetsDir: 'assets',
+    assetsDir: "assets", // keep your assets organized
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"), // your main React app
+        widget: resolve(__dirname, "widget-loader.js"), // ✅ your Shopify loader
+      },
+      output: {
+        entryFileNames: "[name].js", // predictable filenames (main.js, widget.js)
+      },
+    },
   },
-})
+});
