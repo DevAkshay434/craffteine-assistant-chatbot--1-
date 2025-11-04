@@ -6,8 +6,21 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 
 **Current Status:** Successfully configured and running on Replit with OpenAI integration.
 
-## Recent Changes (October 16, 2025)
+## Recent Changes
 
+### November 4, 2025 - Intelligent Formula Creation System
+- **Upgraded to dynamic AI formula generation**: Replaced static question flow with intelligent consultant-style interaction
+- **New system prompt**: AI now acts as an expert product formulator creating custom formulas based on user goals
+- **Enhanced conversation flow**: Natural, adaptive questioning based on Format, Goal, Preferences, and user constraints
+- **Dynamic ingredient selection**: AI recommends 3-6 ingredients with dosage ranges based on user's stated goal and format
+- **Safety features**: AI validates dosages, flags contraindications, and provides safety notes
+- **Formula summary display**: Beautiful UI showing ingredients with rationales, dosage ranges, and safety notes
+- **URL generation**: AI creates properly encoded redirect URLs to Shopify product page
+- **Type system updates**: Added `FormulaSummary` and `Ingredient` types for structured formula data
+- **Fixed API key issue**: Resolved OpenAI API key loading by clearing Vite cache and restarting server
+- **Installed react-markdown**: Added for future rich text formatting support
+
+### October 16, 2025 - Initial Setup
 - Fixed TypeScript configuration by adding `vite-env.d.ts` for environment variable types
 - Configured Vite with `allowedHosts: true` to support Replit's dynamic proxy hostnames
 - Created missing `index.css` file for base styles
@@ -67,13 +80,17 @@ The application follows a modular component architecture with clear separation o
 - No external state management library - keeps it simple with lifted state
 
 **Conversation Flow:**
-Structured 4-step guided workflow:
-1. Format selection (single choice)
-2. Ingredients selection (multi-select)
-3. Dosage configuration (slider with intelligent defaults)
-4. Formula naming (text input)
+Intelligent, adaptive workflow:
+1. Format selection (Stick Pack, Pod, or Nutritional Capsule)
+2. Goal inquiry (e.g., boost focus, sustained energy, recovery, sleep support)
+3. Preferences/constraints (optional - caffeine sensitivity, allergies, age, etc.)
+4. AI generates dynamic formula with 3-6 ingredients based on goal and format
+5. Formula presentation with ingredients, rationales, dosage ranges, and safety notes
+6. Optional dosage adjustment (if user wants to customize)
+7. Formula naming (text input)
+8. Final summary with redirect URL to Shopify customization page
 
-Each step is component-driven with specific input types defined in the Message interface.
+Each step is component-driven with specific input types defined in the Message interface. The AI adapts the conversation based on user responses and only asks necessary questions.
 
 ### API Integration
 

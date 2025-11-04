@@ -1,5 +1,20 @@
 export type Sender = 'user' | 'bot';
 
+export interface Ingredient {
+  name: string;
+  min: number;
+  max: number;
+  suggested: number;
+  unit: string;
+  rationale: string;
+}
+
+export interface FormulaSummary {
+  ingredients: Ingredient[];
+  safetyNote?: string;
+  redirectUrl: string;
+}
+
 export interface Message {
   id: string;
   sender: Sender;
@@ -7,8 +22,9 @@ export interface Message {
   inputType?: 'options' | 'multiselect' | 'slider' | 'text';
   options?: string[];
   sliderConfig?: SliderConfig;
-  component?: string; // e.g., 'Format', 'Ingredients', 'Dosage'
+  component?: string; // e.g., 'Format', 'Goal', 'Preferences', 'Ingredients', 'Dosage', 'FormulaName'
   isComplete?: boolean;
+  formulaSummary?: FormulaSummary;
 }
 
 export interface SliderConfig {
@@ -22,9 +38,12 @@ export interface SliderConfig {
 
 export interface Formula {
   Format?: string;
-  Ingredients?: string[];
+  Goal?: string;
+  Preferences?: string;
+  Ingredients?: string | string[];
   Dosage?: string;
   FormulaName?: string;
+  [key: string]: string | string[] | undefined;
 }
 
 // This is not used in the current workflow but kept for potential future use
