@@ -19,9 +19,10 @@ export interface Message {
   id: string;
   sender: Sender;
   text: string;
-  inputType?: 'options' | 'multiselect' | 'slider' | 'text';
+  inputType?: 'options' | 'multiselect' | 'slider' | 'text' | 'ingredient_sliders';
   options?: string[];
   sliderConfig?: SliderConfig;
+  ingredients?: Ingredient[];
   component?: string; // e.g., 'Format', 'Goal', 'Preferences', 'Ingredients', 'Dosage', 'FormulaName'
   isComplete?: boolean;
   formulaSummary?: FormulaSummary;

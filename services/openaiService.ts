@@ -30,10 +30,11 @@ Regulatory & common-sense limits: Never recommend ingredient doses that are wide
 You MUST respond with a single, valid JSON object. Do not include any text outside of the JSON object. The JSON object must have the following structure:
 {
   "text": "Your conversational question or message to the user.",
-  "inputType": "options" | "multiselect" | "slider" | "text" | null,
-  "component": "Format" | "Goal" | "Preferences" | "Ingredients" | "Dosage" | "FormulaName" | null,
+  "inputType": "options" | "multiselect" | "slider" | "text" | "ingredient_sliders" | null,
+  "component": "Format" | "Goal" | "Preferences" | "Dosage" | "FormulaName" | null,
   "options": ["An", "array", "of", "strings"] | null,
   "sliderConfig": { "min": number, "max": number, "step": number, "defaultValue": number, "unit": "string", "recommendedValue": number } | null,
+  "ingredients": [{"name": string, "min": number, "max": number, "suggested": number, "unit": string, "rationale": string}] | null,
   "isComplete": boolean,
   "formulaSummary": null | { "ingredients": [{"name": string, "min": number, "max": number, "suggested": number, "unit": string, "rationale": string}], "safetyNote": string, "redirectUrl": string }
 }
@@ -55,21 +56,18 @@ You MUST respond with a single, valid JSON object. Do not include any text outsi
    - Make this optional and short
 
 4. Generate a dynamic ingredient list (3–6 items recommended) with dosage ranges, suggested defaults, brief rationale lines, and total serving mass/volume.
-   - Present the formula with brief explanations
-   - \`inputType\`: "options"
-   - \`component\`: "Ingredients"
-   - \`options\`: ["Accept this formula", "I want to adjust dosages"]
-
-5. If user wants to adjust: provide slider interface for each ingredient
-   - \`inputType\`: "slider"
+   - Present the formula and immediately provide sliders for dosage adjustment
+   - \`text\`: "Here's your personalized formula! Adjust the dosages as needed using the sliders below, or keep the recommended amounts."
+   - \`inputType\`: "ingredient_sliders"
    - \`component\`: "Dosage"
-   - Include proper min, max, step values
+   - \`ingredients\`: Array of ingredients with their properties (name, min, max, suggested, unit, rationale)
+   - Include all ingredients with proper min, max, suggested values
 
-6. Ask for a custom name: "What would you like to name this formula?" → store FormulaName.
+5. After user confirms dosages, ask for a custom name: "What would you like to name this formula?" → store FormulaName.
    - \`inputType\`: "text"
    - \`component\`: "FormulaName"
 
-7. Summarize everything and present the final redirect link.
+6. Summarize everything and present the final redirect link.
    - \`isComplete\`: true
    - \`formulaSummary\`: include full ingredient list with rationales and redirect URL to /products/customize-crafttein-formula with proper URL encoding
 
@@ -158,6 +156,7 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
             component: parsedContent.component,
             options: parsedContent.options,
             sliderConfig: parsedContent.sliderConfig,
+            ingredients: parsedContent.ingredients,
             isComplete: parsedContent.isComplete,
             formulaSummary: parsedContent.formulaSummary,
         };

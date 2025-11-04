@@ -6,6 +6,7 @@ import OptionButton from './OptionButton';
 import RangeSlider from './RangeSlider';
 import MultiSelectOptions from './MultiSelectOptions';
 import InlineTextInput from './InlineTextInput';
+import IngredientSliders from './IngredientSliders';
 
 interface ChatWindowProps {
   messages: Message[];
@@ -58,6 +59,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
                     <InlineTextInput onConfirm={(text) => onSelection(text, lastMessage.component!)} disabled={false} />
                 </div>
             );
+        
+        case 'ingredient_sliders':
+            return lastMessage.ingredients ? (
+                <div className="mt-3 px-4">
+                    <IngredientSliders 
+                        ingredients={lastMessage.ingredients} 
+                        onConfirm={(dosages) => onSelection(JSON.stringify(dosages), lastMessage.component!)} 
+                        disabled={false} 
+                    />
+                </div>
+            ) : null;
+        
         default:
             return null;
     }
