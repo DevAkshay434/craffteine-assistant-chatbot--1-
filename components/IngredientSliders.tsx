@@ -3,7 +3,7 @@ import type { Ingredient } from '../types';
 
 interface IngredientSlidersProps {
   ingredients: Ingredient[];
-  onConfirm: (dosages: { [key: string]: number }) => void;
+  onConfirm: (dosages: string) => void;
   disabled: boolean;
 }
 
@@ -21,7 +21,8 @@ const IngredientSliders: React.FC<IngredientSlidersProps> = ({ ingredients, onCo
 
   const handleConfirm = () => {
     if (!disabled) {
-      onConfirm(dosages);
+      // Convert dosages object to JSON string
+      onConfirm(JSON.stringify(dosages));
     }
   };
 

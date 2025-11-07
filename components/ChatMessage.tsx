@@ -88,14 +88,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               </div>
             </div>
             
-            {message.formulaSummary.safetyNote && (
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-lg p-3 shadow-sm">
-                <p className="text-xs text-amber-900 flex items-start">
-                  <span className="text-lg mr-2">⚠️</span>
-                  <span><span className="font-bold">Safety Note:</span> {message.formulaSummary.safetyNote}</span>
-                </p>
-              </div>
-            )}
           </div>
         )}
       </div>
