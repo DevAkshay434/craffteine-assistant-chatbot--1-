@@ -101,12 +101,27 @@ const App: React.FC = () => {
                 id: Date.now().toString(),
                 sender: 'bot',
                 text: response.text,
+                formulaSummary: response.formulaSummary,
             };
 
             const finalFormula = { ...newFormula, [component]: value };
             const queryParams = new URLSearchParams();
+            
             Object.entries(finalFormula).forEach(([key, val]) => {
-                if (val) {
+                if (!val) return;
+                
+                // Special handling for Dosage - parse and add individual ingredients
+                if (key === 'Dosage' && typeof val === 'string') {
+                    try {
+                        const dosageMap = JSON.parse(val);
+                        Object.entries(dosageMap).forEach(([ingredientName, dosage]) => {
+                            queryParams.append(ingredientName, String(dosage));
+                        });
+                    } catch (e) {
+                        // If parsing fails, just append as is
+                        queryParams.append(key, val);
+                    }
+                } else {
                     queryParams.append(key, Array.isArray(val) ? val.join(',') : val);
                 }
             });
