@@ -125,11 +125,9 @@ const App: React.FC = () => {
                         }
                         
                         Object.entries(dosageMap).forEach(([ingredientName, dosage]) => {
-                            // Add "ingredient_" prefix with dosage value
-                            queryParams.append(`ingredient_${ingredientName}`, String(dosage));
-                            // Add unit parameter for each ingredient
+                            // Add "ingredient_" prefix with dosage value and unit combined (e.g., "100mg")
                             const unit = ingredientUnits[ingredientName] || 'mg';
-                            queryParams.append(`ingredient_${ingredientName}_unit`, unit);
+                            queryParams.append(`ingredient_${ingredientName}`, `${dosage}${unit}`);
                         });
                     } catch (e) {
                         // If parsing fails, just append as is
