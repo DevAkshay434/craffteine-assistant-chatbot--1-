@@ -1,0 +1,525 @@
+{
+  "blends": [
+    "Craffteine® ENERGY+",
+    "Craffteine® FOCUS FLOW",
+    "Craffteine® CALM CORE",
+    "Craffteine® THERMO BURN",
+    "Craffteine® PUMP+PERFORM",
+    "Craffteine® IMMUNITY GUARD",
+    "Craffteine® HYDRATE+"
+  ],
+  "ingredients": [
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Caffeine Anhydrous",
+      "min": 0,
+      "max": 300,
+      "suggested": 200,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "L-Theanine",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Guarana Extract",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "L-Tyrosine",
+      "min": 0,
+      "max": 500,
+      "suggested": 500,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Vitamin B3",
+      "min": 0,
+      "max": 20,
+      "suggested": 20,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Vitamin B5",
+      "min": 0,
+      "max": 10,
+      "suggested": 10,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Vitamin B12",
+      "min": 0,
+      "max": 500,
+      "suggested": 500,
+      "unit": "mcg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Piperine",
+      "min": 0,
+      "max": 5,
+      "suggested": 5,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® ENERGY+",
+      "name": "Green Tea Extract",
+      "min": 0,
+      "max": 200,
+      "suggested": 200,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "L-Theanine",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Alpha-GPC",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Rhodiola Rosea",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Huperzine A",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mcg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Citicoline",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Vitamin B6",
+      "min": 0,
+      "max": 5,
+      "suggested": 5,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Lion's Mane",
+      "min": 0,
+      "max": 500,
+      "suggested": 500,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "L-Tyrosine",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® FOCUS FLOW",
+      "name": "Bacopa",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Kanna",
+      "min": 0,
+      "max": 50,
+      "suggested": 50,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Ashwagandha",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Magnesium Glycinate",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Lemon Balm",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "GABA",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Holy Basil",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "Vitamin B6",
+      "min": 0,
+      "max": 5,
+      "suggested": 5,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "L-Theanine",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® CALM CORE",
+      "name": "5-HTP",
+      "min": 0,
+      "max": 50,
+      "suggested": 50,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Caffeine Anhydrous",
+      "min": 0,
+      "max": 300,
+      "suggested": 200,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Green Tea Extract",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Capsaicin",
+      "min": 0,
+      "max": 50,
+      "suggested": 50,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Grains of Paradise",
+      "min": 0,
+      "max": 40,
+      "suggested": 40,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Ginger Root Extract",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Forskolin",
+      "min": 0,
+      "max": 125,
+      "suggested": 125,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Piperine",
+      "min": 0,
+      "max": 5,
+      "suggested": 5,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Berberine",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "Vitamin B3",
+      "min": 0,
+      "max": 25,
+      "suggested": 25,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® THERMO BURN",
+      "name": "L-Carnitine",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "L-Citrulline Malate",
+      "min": 0,
+      "max": 6000,
+      "suggested": 6000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Beta-Alanine",
+      "min": 0,
+      "max": 2000,
+      "suggested": 2000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Creatine Monohydrate",
+      "min": 0,
+      "max": 3000,
+      "suggested": 3000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Beet Root Powder",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Coconut Water Powder",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Sodium",
+      "min": 0,
+      "max": 200,
+      "suggested": 200,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Potassium",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "Magnesium",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® PUMP+PERFORM",
+      "name": "BCAAs",
+      "min": 0,
+      "max": 3000,
+      "suggested": 3000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Vitamin C",
+      "min": 0,
+      "max": 500,
+      "suggested": 500,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Zinc",
+      "min": 0,
+      "max": 15,
+      "suggested": 15,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Vitamin D3",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "IU"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Reishi Mushroom",
+      "min": 0,
+      "max": 500,
+      "suggested": 500,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Elderberry",
+      "min": 0,
+      "max": 400,
+      "suggested": 400,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Quercetin",
+      "min": 0,
+      "max": 300,
+      "suggested": 300,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Astragalus Root",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Holy Basil",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® IMMUNITY GUARD",
+      "name": "Olive Leaf Extract",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Sodium",
+      "min": 0,
+      "max": 250,
+      "suggested": 250,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Potassium Citrate",
+      "min": 0,
+      "max": 200,
+      "suggested": 200,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Magnesium",
+      "min": 0,
+      "max": 100,
+      "suggested": 100,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Calcium",
+      "min": 0,
+      "max": 150,
+      "suggested": 150,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Coconut Water Powder",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Hyaluronic Acid",
+      "min": 0,
+      "max": 50,
+      "suggested": 50,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "D-Ribose",
+      "min": 0,
+      "max": 2000,
+      "suggested": 2000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "Inulin",
+      "min": 0,
+      "max": 1000,
+      "suggested": 1000,
+      "unit": "mg"
+    },
+    {
+      "blend": "Craffteine® HYDRATE+",
+      "name": "L-Theanine",
+      "min": 0,
+      "max": 50,
+      "suggested": 50,
+      "unit": "mg"
+    }
+  ]
+}
