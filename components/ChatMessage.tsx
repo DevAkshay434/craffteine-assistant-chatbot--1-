@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Message } from '../types';
 import { UserIcon } from './icons/UserIcon';
-import emmaAvatar from '../src/assets/emma-avatar.png';
+import emmaAvatar from '../src/assets/emma-avatar.jpg';
 
 interface ChatMessageProps {
   message: Message;
