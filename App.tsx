@@ -110,12 +110,13 @@ const App: React.FC = () => {
             Object.entries(finalFormula).forEach(([key, val]) => {
                 if (!val) return;
                 
-                // Special handling for Dosage - parse and add individual ingredients
+                // Special handling for Dosage - parse and add individual ingredients with prefix
                 if (key === 'Dosage' && typeof val === 'string') {
                     try {
                         const dosageMap = JSON.parse(val);
                         Object.entries(dosageMap).forEach(([ingredientName, dosage]) => {
-                            queryParams.append(ingredientName, String(dosage));
+                            // Add "ingredient_" prefix so Shopify JS can identify ingredients
+                            queryParams.append(`ingredient_${ingredientName}`, String(dosage));
                         });
                     } catch (e) {
                         // If parsing fails, just append as is
