@@ -110,13 +110,26 @@ const App: React.FC = () => {
             Object.entries(finalFormula).forEach(([key, val]) => {
                 if (!val) return;
                 
-                // Special handling for Dosage - parse and add individual ingredients with prefix
+                // Special handling for Dosage - parse and add individual ingredients with prefix and units
                 if (key === 'Dosage' && typeof val === 'string') {
                     try {
                         const dosageMap = JSON.parse(val);
+                        const lastBotMessage = messages[messages.length - 1];
+                        
+                        // Get units from the bot message ingredients
+                        const ingredientUnits: { [key: string]: string } = {};
+                        if (lastBotMessage?.ingredients) {
+                            lastBotMessage.ingredients.forEach(ing => {
+                                ingredientUnits[ing.name] = ing.unit;
+                            });
+                        }
+                        
                         Object.entries(dosageMap).forEach(([ingredientName, dosage]) => {
-                            // Add "ingredient_" prefix so Shopify JS can identify ingredients
+                            // Add "ingredient_" prefix with dosage value
                             queryParams.append(`ingredient_${ingredientName}`, String(dosage));
+                            // Add unit parameter for each ingredient
+                            const unit = ingredientUnits[ingredientName] || 'mg';
+                            queryParams.append(`ingredient_${ingredientName}_unit`, unit);
                         });
                     } catch (e) {
                         // If parsing fails, just append as is
