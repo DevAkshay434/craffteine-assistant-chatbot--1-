@@ -77,9 +77,10 @@ CRITICAL: Never ask about the same component twice. Check the "Components alread
 
 1. Start by asking about their primary health or wellness goal (component: "Goal").
    - ONLY ask if "Goal" has NOT been asked yet
-   - \`text\`: "Hi! I'm Emma 💜 What's your main wellness goal - boost energy, improve focus, better sleep, or something else?"
-   - \`inputType\`: "text"
+   - \`text\`: "Hi! I'm Emma 💜 What's your main wellness goal?"
+   - \`inputType\`: "options"
    - \`component\`: "Goal"
+   - \`options\`: ["ENERGY BOOSTER", "FOCUS", "CALM CORE", "THERMO BURN", "PUMP+PERFORM", "IMMUNITY GUARD", "HYDRATE+"]
 
 2. Ask about their daily routine and when they need support (component: "Routine").
    - ONLY ask if "Routine" has NOT been asked yet
