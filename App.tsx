@@ -106,42 +106,42 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-transparent">
-      <div className="w-full max-w-4xl h-full md:h-auto md:max-h-[700px] bg-white md:rounded-2xl md:shadow-2xl md:border md:border-purple-200 overflow-hidden flex flex-col">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <SparklesIcon className="w-8 h-8" />
+    <div className="w-full min-h-screen flex items-center justify-center bg-transparent p-2">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg border border-purple-200 overflow-hidden flex flex-col">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <SparklesIcon className="w-5 h-5" />
             <div>
-              <h2 className="text-2xl font-bold">Craffteine Formula Builder</h2>
-              <p className="text-purple-100 text-sm">Personalized wellness formulas, just for you</p>
+              <h2 className="text-lg font-bold">Formula Builder</h2>
+              <p className="text-purple-100 text-xs">Personalized for you</p>
             </div>
           </div>
           {hasStarted && (
             <button
               onClick={resetChat}
-              className="text-white hover:bg-white/20 rounded-full px-4 py-2 text-sm font-semibold transition-colors"
+              className="text-white hover:bg-white/20 rounded-full px-3 py-1 text-xs font-semibold transition-colors"
             >
-              Start Over
+              Reset
             </button>
           )}
         </div>
 
         {!hasStarted ? (
-          <div className="flex flex-col items-center justify-center p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50 flex-1">
-            <SparklesIcon className="w-24 h-24 text-purple-500 mb-6" />
-            <h3 className="text-3xl font-bold text-gray-800 mb-3">Create Your Perfect Formula</h3>
-            <p className="text-gray-600 mb-8 max-w-md text-lg">
-              Let's build a personalized energy and wellness formula tailored just for you!
+          <div className="flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-purple-50 to-pink-50">
+            <SparklesIcon className="w-16 h-16 text-purple-500 mb-4" />
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Create Your Formula</h3>
+            <p className="text-gray-600 mb-6 text-sm max-w-sm">
+              Build a personalized wellness formula tailored just for you
             </p>
             <button
               onClick={handleStart}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold text-lg rounded-full shadow-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50 transition-all duration-200 transform hover:scale-105"
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-200"
             >
-              Let's create your perfect wellness formula! 💜✨
+              Let's create your formula! 💜✨
             </button>
           </div>
         ) : (
-          <div className="h-[600px]">
+          <div className="h-[500px]">
             <ChatWindow messages={messages} isTyping={isTyping} onSelection={handleSelection} proceedUrl={proceedUrl} />
           </div>
         )}
