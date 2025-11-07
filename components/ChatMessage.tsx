@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Message } from '../types';
-import { BotIcon } from './icons/BotIcon';
 import { UserIcon } from './icons/UserIcon';
 
 interface ChatMessageProps {
@@ -17,8 +16,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`flex items-start gap-2 ${isBot ? 'justify-start' : 'justify-end'}`}>
       {isBot && (
-        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center">
-          <BotIcon className="w-4 h-4" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden border-2 border-purple-300 shadow-sm">
+          <img src="/emma-avatar.png" alt="Emma" className="w-full h-full object-cover" />
         </div>
       )}
       <div
