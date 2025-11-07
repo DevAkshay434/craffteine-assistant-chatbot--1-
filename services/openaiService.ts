@@ -73,32 +73,40 @@ You MUST respond with a single, valid JSON object. Do not include any text outsi
 
 **CONVERSATION FLOW (natural, expert consultation style):**
 
-1. Start by asking about their primary health or wellness goal.
+CRITICAL: Never ask about the same component twice. Check the "Components already asked about" list in the system message and skip those questions.
+
+1. Start by asking about their primary health or wellness goal (component: "Goal").
+   - ONLY ask if "Goal" has NOT been asked yet
    - \`text\`: "Hi! I'm here to help you create the perfect energy formula. Let's start with the basics - what's your main goal? Are you looking to boost focus, increase energy, improve recovery, support sleep, or something else?"
    - \`inputType\`: "text"
    - \`component\`: "Goal"
 
-2. Ask about their daily routine and when they need support.
+2. Ask about their daily routine and when they need support (component: "Routine").
+   - ONLY ask if "Routine" has NOT been asked yet
    - \`text\`: Something like "Tell me about your typical day - when do you usually need an energy boost? Morning, afternoon slump, pre-workout, or throughout the day?"
    - \`inputType\`: "text"
    - \`component\`: "Routine"
 
-3. Ask about lifestyle and activity level.
+3. Ask about lifestyle and activity level (component: "Lifestyle").
+   - ONLY ask if "Lifestyle" has NOT been asked yet
    - \`text\`: "What's your lifestyle like? Are you very active, do you travel frequently, work from home, or mostly on the go?"
    - \`inputType\`: "text"
    - \`component\`: "Lifestyle"
 
-4. Ask about sensitivities and restrictions.
+4. Ask about sensitivities and restrictions (component: "Sensitivities").
+   - ONLY ask if "Sensitivities" has NOT been asked yet
    - \`text\`: "Do you have any sensitivities or allergies I should know about? For example, caffeine sensitivity, allergies to certain ingredients, or dietary restrictions?"
    - \`inputType\`: "text"
    - \`component\`: "Sensitivities"
 
-5. Ask about current supplements or medications.
+5. Ask about current supplements or medications (component: "CurrentSupplements").
+   - ONLY ask if "CurrentSupplements" has NOT been asked yet
    - \`text\`: "Are you currently taking any supplements or medications? This helps me avoid any interactions."
    - \`inputType\`: "text"
    - \`component\`: "CurrentSupplements"
 
-6. Ask about experience level (optional, you may skip this if you have enough information).
+6. Ask about experience level (component: "Experience") - OPTIONAL, you may skip this if you have enough information.
+   - ONLY ask if "Experience" has NOT been asked yet
    - \`text\`: "Are you new to supplements or have you used them before? This helps me calibrate the formula."
    - \`inputType\`: "text"
    - \`component\`: "Experience"
@@ -135,20 +143,37 @@ const formatHistory = (history: Message[], formula: Formula): { role: 'user' | '
         content: systemInstruction
     }];
     
-    // Add a summary of what has been collected so far
+    // Track which components have been asked
+    const componentsAsked = new Set<string>();
+    
+    // Add a summary of what has been collected so far with component tracking
     if(Object.keys(formula).length > 0) {
+        const formulaSummary = Object.entries(formula).map(([component, value]) => {
+            componentsAsked.add(component);
+            return `${component}: ${typeof value === 'object' ? JSON.stringify(value) : value}`;
+        }).join(', ');
+        
         formatted.push({
             role: 'system',
-            content: `Current formula details collected so far: ${JSON.stringify(formula)}`
+            content: `Information already collected:\n${formulaSummary}\n\nComponents already asked about: ${Array.from(componentsAsked).join(', ')}\n\nDO NOT ask about these components again. Move to the next step in the conversation flow.`
         });
     }
 
     history.forEach(msg => {
         if(msg.sender === 'bot' && msg.id === 'start') return; // Don't include the static start message
-        formatted.push({
-            role: msg.sender === 'user' ? 'user' : 'assistant',
-            content: msg.text
-        });
+        
+        // For bot messages, include what component they were asking about
+        if(msg.sender === 'bot' && msg.component) {
+            formatted.push({
+                role: 'assistant',
+                content: `[Asked about: ${msg.component}] ${msg.text}`
+            });
+        } else {
+            formatted.push({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.text
+            });
+        }
     });
 
     return formatted;
