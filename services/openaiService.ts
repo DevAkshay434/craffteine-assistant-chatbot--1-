@@ -190,9 +190,11 @@ const formatHistory = (history: Message[], formula: Formula): { role: 'user' | '
                 content: `[Asked about: ${msg.component}] ${msg.text}`
             });
         } else {
+            // Ensure content is always a string, not an object
+            const content = typeof msg.text === 'string' ? msg.text : JSON.stringify(msg.text);
             formatted.push({
                 role: msg.sender === 'user' ? 'user' : 'assistant',
-                content: msg.text
+                content: content
             });
         }
     });

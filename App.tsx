@@ -56,10 +56,10 @@ const App: React.FC = () => {
   };
   
   const handleSelection = async (value: string | string[], component: string) => {
-    const userMessageText = Array.isArray(value) ? value.join(', ') : value;
-    
     // Parse ingredient selections to create visual display
     let selectedIngredients = undefined;
+    let userMessageText = Array.isArray(value) ? value.join(', ') : value;
+    
     if (component === 'Dosage' && typeof value === 'string') {
       try {
         const dosageMap = JSON.parse(value);
@@ -70,9 +70,12 @@ const App: React.FC = () => {
             dosage: dosageMap[ing.name] || ing.suggested,
             unit: ing.unit
           }));
+          // Create a readable text version for the chat history
+          userMessageText = selectedIngredients.map(ing => `${ing.name}: ${ing.dosage} ${ing.unit}`).join(', ');
         }
       } catch (e) {
         // If parsing fails, fall back to text display
+        console.error('Failed to parse ingredient dosages:', e);
       }
     }
     
