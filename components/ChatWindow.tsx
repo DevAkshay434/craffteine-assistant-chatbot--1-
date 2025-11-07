@@ -91,9 +91,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
                 href={proceedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 w-full block text-center px-4 py-3 bg-green-500 text-white font-bold rounded-lg shadow-lg hover:bg-green-600 transition-all duration-200"
+                className="mt-4 w-full block text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-600 transition-all duration-200 transform hover:scale-105"
             >
-                Proceed
+                ✨ Complete Your Order ✨
             </a>
         )}
       </div>

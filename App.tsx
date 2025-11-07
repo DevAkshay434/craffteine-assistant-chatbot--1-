@@ -37,7 +37,7 @@ const App: React.FC = () => {
     const welcomeMessage: Message = {
       id: 'start',
       sender: 'bot',
-      text: "Help me build an energy blend ⚡",
+      text: "Let's create your perfect wellness formula! 💜✨",
     };
     setMessages([welcomeMessage]);
 
