@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatWindow from './components/ChatWindow';
-import ChatBubble from './components/ChatBubble';
 import { getNextStep } from './services/openaiService';
 import { Message, Formula } from './types';
 import { SparklesIcon } from './components/icons/SparklesIcon';
@@ -9,7 +8,6 @@ import { SparklesIcon } from './components/icons/SparklesIcon';
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 
 const App: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -107,45 +105,48 @@ const App: React.FC = () => {
     setIsTyping(false);
   };
 
-  const toggleChat = () => {
-    setIsOpen(prev => !prev);
-    if (isOpen) { // Logic when closing the chat
-        resetChat();
-    }
-  };
-
   return (
-    <>
-      <div className={`fixed bottom-24 right-5 z-50 w-full max-w-sm h-[70vh] max-h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
-        <header className="flex items-center justify-between p-4 bg-purple-600 text-white rounded-t-2xl shadow-md">
-          <div className="flex items-center gap-2">
-            <SparklesIcon className="w-5 h-5" />
-            <h1 className="text-lg font-bold">Craffteine Assistant</h1>
-          </div>
-        </header>
-        
-        {!hasStarted ? (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-gray-50 rounded-b-2xl">
-                <h2 className="text-2xl font-bold text-gray-800">Build Your Energy Blend</h2>
-                <p className="mt-2 text-gray-600">Let's create the perfect formula for you, step-by-step.</p>
-                <button 
-                    onClick={handleStart}
-                    className="mt-6 px-8 py-3 bg-purple-600 text-white font-bold rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-200"
-                >
-                    Start
-                </button>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <div className="bg-white rounded-2xl shadow-2xl border border-purple-200 overflow-hidden flex flex-col">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <SparklesIcon className="w-8 h-8" />
+            <div>
+              <h2 className="text-2xl font-bold">Craffteine Formula Builder</h2>
+              <p className="text-purple-100 text-sm">Personalized wellness formulas, just for you</p>
             </div>
+          </div>
+          {hasStarted && (
+            <button
+              onClick={resetChat}
+              className="text-white hover:bg-white/20 rounded-full px-4 py-2 text-sm font-semibold transition-colors"
+            >
+              Start Over
+            </button>
+          )}
+        </div>
+
+        {!hasStarted ? (
+          <div className="flex flex-col items-center justify-center p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50">
+            <SparklesIcon className="w-24 h-24 text-purple-500 mb-6" />
+            <h3 className="text-3xl font-bold text-gray-800 mb-3">Create Your Perfect Formula</h3>
+            <p className="text-gray-600 mb-8 max-w-md text-lg">
+              Let's build a personalized energy and wellness formula tailored just for you!
+            </p>
+            <button
+              onClick={handleStart}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold text-lg rounded-full shadow-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50 transition-all duration-200 transform hover:scale-105"
+            >
+              Let's create your perfect wellness formula! 💜✨
+            </button>
+          </div>
         ) : (
-            <ChatWindow
-              messages={messages}
-              isTyping={isTyping}
-              onSelection={handleSelection}
-              proceedUrl={proceedUrl}
-            />
+          <div className="h-[600px]">
+            <ChatWindow messages={messages} isTyping={isTyping} onSelection={handleSelection} proceedUrl={proceedUrl} />
+          </div>
         )}
       </div>
-      <ChatBubble onClick={toggleChat} isOpen={isOpen} />
-    </>
+    </div>
   );
 };
 
