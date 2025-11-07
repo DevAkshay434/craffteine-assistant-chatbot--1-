@@ -65,7 +65,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
                 <div className="mt-3 px-4 max-h-96 overflow-y-auto">
                     <IngredientSliders 
                         ingredients={lastMessage.ingredients} 
-                        onConfirm={(dosages) => onSelection(JSON.stringify(dosages), lastMessage.component!)} 
+                        onConfirm={(dosages) => onSelection(dosages, lastMessage.component!)} 
                         disabled={false} 
                     />
                 </div>

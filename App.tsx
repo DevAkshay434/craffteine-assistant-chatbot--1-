@@ -57,10 +57,30 @@ const App: React.FC = () => {
   
   const handleSelection = async (value: string | string[], component: string) => {
     const userMessageText = Array.isArray(value) ? value.join(', ') : value;
+    
+    // Parse ingredient selections to create visual display
+    let selectedIngredients = undefined;
+    if (component === 'Dosage' && typeof value === 'string') {
+      try {
+        const dosageMap = JSON.parse(value);
+        const lastBotMessage = messages[messages.length - 1];
+        if (lastBotMessage?.ingredients) {
+          selectedIngredients = lastBotMessage.ingredients.map(ing => ({
+            name: ing.name,
+            dosage: dosageMap[ing.name] || ing.suggested,
+            unit: ing.unit
+          }));
+        }
+      } catch (e) {
+        // If parsing fails, fall back to text display
+      }
+    }
+    
     const newUserMessage: Message = {
       id: Date.now().toString(),
       sender: 'user',
       text: userMessageText,
+      selectedIngredients,
     };
 
     const newFormula = { ...formula, [component]: value };

@@ -11,8 +11,16 @@ export interface Ingredient {
 
 export interface FormulaSummary {
   ingredients: Ingredient[];
+  deliveryFormat?: string;
+  formulaName?: string;
   safetyNote?: string;
   redirectUrl: string;
+}
+
+export interface SelectedIngredient {
+  name: string;
+  dosage: number;
+  unit: string;
 }
 
 export interface Message {
@@ -23,6 +31,7 @@ export interface Message {
   options?: string[];
   sliderConfig?: SliderConfig;
   ingredients?: Ingredient[];
+  selectedIngredients?: SelectedIngredient[]; // User's selected ingredients with dosages
   component?: string; // e.g., 'Format', 'Goal', 'Preferences', 'Ingredients', 'Dosage', 'FormulaName'
   isComplete?: boolean;
   formulaSummary?: FormulaSummary;
