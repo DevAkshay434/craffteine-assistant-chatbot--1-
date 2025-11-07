@@ -33,28 +33,37 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         )}
         
         {message.formulaSummary && (
-          <div className="mt-3 space-y-3">
-            <div className="space-y-2">
-              <h4 className="font-bold text-gray-900 text-base">Your Formula:</h4>
+          <div className="mt-4 space-y-4">
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+              <div className="flex items-center justify-center mb-3">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
+                  ✨ Your Custom Formula ✨
+                </div>
+              </div>
+              
               <div className="space-y-2">
                 {message.formulaSummary.ingredients.map((ingredient, idx) => (
-                  <div key={idx} className="bg-gray-50 p-2 rounded border border-gray-200">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-semibold text-gray-900 text-xs">{ingredient.name}</span>
-                      <span className="text-xs text-purple-600 font-medium">
+                  <div key={idx} className="bg-white p-3 rounded-lg border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold text-gray-900 text-sm flex items-center">
+                        <span className="text-purple-500 mr-2">●</span>
+                        {ingredient.name}
+                      </span>
+                      <span className="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow">
                         {ingredient.suggested} {ingredient.unit}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600">{ingredient.rationale}</p>
+                    <p className="text-xs text-gray-600 ml-4">{ingredient.rationale}</p>
                   </div>
                 ))}
               </div>
             </div>
             
             {message.formulaSummary.safetyNote && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded p-2">
-                <p className="text-xs text-yellow-900">
-                  <span className="font-semibold">Safety:</span> {message.formulaSummary.safetyNote}
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-lg p-3 shadow-sm">
+                <p className="text-xs text-amber-900 flex items-start">
+                  <span className="text-lg mr-2">⚠️</span>
+                  <span><span className="font-bold">Safety Note:</span> {message.formulaSummary.safetyNote}</span>
                 </p>
               </div>
             )}

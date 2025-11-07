@@ -91,9 +91,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
                 href={proceedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 w-full block text-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold text-sm rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-600 transition-all duration-200"
+                className="mt-3 w-full block text-center px-6 py-3 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-bold text-base rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 gradient-animate shimmer"
             >
-                ✨ Complete Your Order ✨
+                <span className="flex items-center justify-center gap-2">
+                  <span>🎉</span>
+                  <span>Complete Your Order</span>
+                  <span>🎉</span>
+                </span>
             </a>
         )}
       </div>
