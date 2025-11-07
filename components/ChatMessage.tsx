@@ -29,7 +29,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         }`}
       >
         {message.text && !message.selectedIngredients && (
-          <p className={`${isBot ? 'text-gray-800' : 'text-white'} text-sm`}>{message.text}</p>
+          <p className={`${isBot ? 'text-gray-800' : 'text-white'} text-sm`}>
+            {typeof message.text === 'string' ? message.text : JSON.stringify(message.text)}
+          </p>
         )}
         
         {message.selectedIngredients && (
