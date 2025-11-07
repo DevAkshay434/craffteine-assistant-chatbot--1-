@@ -13,8 +13,6 @@ export default defineConfig({
     port: 5000,
     allowedHosts: true,
     hmr: {
-      protocol: "wss",
-      host: undefined,
       clientPort: 443,
     },
   },
