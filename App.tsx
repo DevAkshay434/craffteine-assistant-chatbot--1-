@@ -106,8 +106,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
-      <div className="bg-white rounded-2xl shadow-2xl border border-purple-200 overflow-hidden flex flex-col">
+    <div className="w-full h-screen flex items-center justify-center bg-transparent">
+      <div className="w-full max-w-4xl h-full md:h-auto md:max-h-[700px] bg-white md:rounded-2xl md:shadow-2xl md:border md:border-purple-200 overflow-hidden flex flex-col">
         <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <SparklesIcon className="w-8 h-8" />
@@ -127,7 +127,7 @@ const App: React.FC = () => {
         </div>
 
         {!hasStarted ? (
-          <div className="flex flex-col items-center justify-center p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50">
+          <div className="flex flex-col items-center justify-center p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50 flex-1">
             <SparklesIcon className="w-24 h-24 text-purple-500 mb-6" />
             <h3 className="text-3xl font-bold text-gray-800 mb-3">Create Your Perfect Formula</h3>
             <p className="text-gray-600 mb-8 max-w-md text-lg">
