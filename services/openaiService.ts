@@ -190,6 +190,29 @@ CRITICAL: Keep ALL responses SHORT - maximum 1-2 lines per message.
 
 Safety fallback: If user asks for illegal or clearly harmful substances or unsafe dosage, refuse that part, explain why, and offer safe alternatives.`;
 
+// Helper to validate and clamp ingredient dosages within database ranges
+const validateIngredientDosages = (ingredients: any[]): any[] => {
+    if (!ingredients || !Array.isArray(ingredients)) return ingredients;
+    
+    return ingredients.map(ing => {
+        // Clamp suggested value within min/max range
+        if (ing.suggested !== undefined && ing.min !== undefined && ing.max !== undefined) {
+            const clamped = Math.max(ing.min, Math.min(ing.max, ing.suggested));
+            
+            if (clamped !== ing.suggested) {
+                console.warn(`Dosage clamped for ${ing.name}: ${ing.suggested} → ${clamped} (range: ${ing.min}-${ing.max})`);
+            }
+            
+            return {
+                ...ing,
+                suggested: clamped
+            };
+        }
+        
+        return ing;
+    });
+};
+
 // Helper to build persona summary for intelligent dosage decisions
 const buildPersonaSummary = (formula: Formula): string => {
     if (Object.keys(formula).length === 0) return '';
@@ -198,7 +221,7 @@ const buildPersonaSummary = (formula: Formula): string => {
     
     // Experience level (most important for dosage)
     if (formula.Experience) {
-        const exp = formula.Experience.toLowerCase();
+        const exp = String(formula.Experience).toLowerCase();
         if (exp.includes('beginner') || exp.includes('new') || exp.includes('never')) {
             parts.push('- Experience: BEGINNER → Use 40-60% of dosage range');
         } else if (exp.includes('experienced') || exp.includes('advanced') || exp.includes('years')) {
@@ -212,8 +235,8 @@ const buildPersonaSummary = (formula: Formula): string => {
     
     // Activity level
     if (formula.Lifestyle || formula.Routine) {
-        const lifestyle = (formula.Lifestyle || '').toLowerCase();
-        const routine = (formula.Routine || '').toLowerCase();
+        const lifestyle = String(formula.Lifestyle || '').toLowerCase();
+        const routine = String(formula.Routine || '').toLowerCase();
         const combined = lifestyle + ' ' + routine;
         
         if (combined.includes('athlete') || combined.includes('gym') || combined.includes('workout') || combined.includes('active') || combined.includes('exercise')) {
@@ -227,7 +250,7 @@ const buildPersonaSummary = (formula: Formula): string => {
     
     // Sensitivities and safety concerns
     if (formula.Sensitivities) {
-        const sens = formula.Sensitivities.toLowerCase();
+        const sens = String(formula.Sensitivities).toLowerCase();
         if (sens.includes('caffeine') || sens.includes('stimulant')) {
             parts.push('- ALERT: Caffeine/stimulant sensitivity → Reduce stimulants to 30-50% of range');
         }
@@ -241,7 +264,7 @@ const buildPersonaSummary = (formula: Formula): string => {
     
     // Current medications/supplements
     if (formula.CurrentSupplements) {
-        const curr = formula.CurrentSupplements.toLowerCase();
+        const curr = String(formula.CurrentSupplements).toLowerCase();
         if (curr.includes('medication') || curr.includes('prescription') || (curr !== 'none' && curr !== 'no' && curr.length > 3)) {
             parts.push('- Taking other supplements/meds → Be conservative with dosages');
         }
@@ -249,7 +272,7 @@ const buildPersonaSummary = (formula: Formula): string => {
     
     // Goal-based adjustments
     if (formula.Goal) {
-        const goal = formula.Goal.toLowerCase();
+        const goal = String(formula.Goal).toLowerCase();
         if (goal.includes('energy') || goal.includes('focus') || goal.includes('performance')) {
             parts.push('- Goal needs strong support → Use higher end within safety limits');
         } else if (goal.includes('relax') || goal.includes('sleep') || goal.includes('calm')) {
@@ -356,6 +379,13 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
 
         // The response is expected to be a valid JSON string
         const parsedContent = JSON.parse(content);
+        
+        // Validate and clamp ingredient dosages to ensure safety
+        const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
+        const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
+            ...parsedContent.formulaSummary,
+            ingredients: validateIngredientDosages(parsedContent.formulaSummary.ingredients)
+        } : parsedContent.formulaSummary;
 
         return {
             id: Date.now().toString(),
@@ -365,9 +395,9 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
             component: parsedContent.component,
             options: parsedContent.options,
             sliderConfig: parsedContent.sliderConfig,
-            ingredients: parsedContent.ingredients,
+            ingredients: validatedIngredients,
             isComplete: parsedContent.isComplete,
-            formulaSummary: parsedContent.formulaSummary,
+            formulaSummary: validatedFormulaSummary,
         };
 
     } catch (error) {
