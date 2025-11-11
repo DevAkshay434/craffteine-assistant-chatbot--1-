@@ -603,18 +603,20 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
         while (attemptCount < maxAttempts) {
             attemptCount++;
             
+            const requestBody: any = {
+                model: 'gpt-4o',
+                messages: messages,
+                functions: functionSchemas,
+                function_call: 'auto',
+            };
+            
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 },
-                body: JSON.stringify({
-                    model: 'gpt-4o',
-                    messages: messages,
-                    functions: functionSchemas,
-                    function_call: 'auto',
-                })
+                body: JSON.stringify(requestBody)
             });
 
             if (!response.ok) {
@@ -654,7 +656,55 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                     content: functionResult
                 } as any);
                 
-                continue;
+                const finalResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o',
+                        messages: messages,
+                        response_format: { type: "json_object" },
+                    })
+                });
+
+                if (!finalResponse.ok) {
+                    const errorData = await finalResponse.json();
+                    console.error('OpenAI API Error (after function):', errorData);
+                    return {
+                        id: 'error',
+                        sender: 'bot',
+                        text: `Sorry, there was an error: ${errorData.error.message}`
+                    };
+                }
+
+                const finalData = await finalResponse.json();
+                const finalMessage = finalData.choices[0]?.message;
+                
+                if (!finalMessage?.content) {
+                    continue;
+                }
+                
+                const parsedContent = JSON.parse(finalMessage.content);
+                const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
+                const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
+                    ...parsedContent.formulaSummary,
+                    ingredients: validateIngredientDosages(parsedContent.formulaSummary.ingredients)
+                } : parsedContent.formulaSummary;
+
+                return {
+                    id: Date.now().toString(),
+                    sender: 'bot',
+                    text: parsedContent.text || "I'm not sure what to say next!",
+                    inputType: parsedContent.inputType,
+                    component: parsedContent.component,
+                    options: parsedContent.options,
+                    sliderConfig: parsedContent.sliderConfig,
+                    ingredients: validatedIngredients,
+                    isComplete: parsedContent.isComplete,
+                    formulaSummary: validatedFormulaSummary,
+                };
             }
 
             const content = message.content;
@@ -662,7 +712,20 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                 return { id: 'error', sender: 'bot', text: 'Sorry, I received an empty response.' };
             }
 
-            const parsedContent = JSON.parse(content);
+            let parsedContent;
+            try {
+                parsedContent = JSON.parse(content);
+            } catch (parseError) {
+                console.error('Failed to parse JSON response:', content);
+                console.error('Parse error:', parseError);
+                return {
+                    id: 'error',
+                    sender: 'bot',
+                    text: 'Hey! 👋 What are you looking for today? Energy, focus, hydration, or something else?',
+                    inputType: 'text',
+                    component: 'Goal'
+                };
+            }
             
             const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
             const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
