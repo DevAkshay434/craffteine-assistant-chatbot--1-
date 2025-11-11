@@ -8,6 +8,16 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 
 ## Recent Changes
 
+### November 11, 2025 - Intelligent Dosage Personalization System
+- **Smart dosage scaling**: OpenAI now calculates personalized ingredient dosages based on user profile instead of always suggesting maximum values
+- **Persona analysis**: System analyzes user's experience level (beginner/moderate/advanced), activity level, sensitivities, medications, and goals
+- **Dosage rubric**: Beginner users get 40-60% of range, moderate 60-80%, advanced 80-100%, with safety overrides for sensitivities
+- **Multi-factor considerations**: Dosages adjusted based on caffeine sensitivity, anxiety/sleep issues, current medications, and stated goals
+- **Safety validation**: Added `validateIngredientDosages` function that clamps all AI-recommended dosages within database min/max ranges
+- **Persona summary**: `buildPersonaSummary` function creates detailed user profile for AI to reference when calculating dosages
+- **Example scenarios**: Beginner+sedentary gets ~75mg caffeine (40%), experienced+athlete gets ~170mg (85%), caffeine-sensitive gets ~65mg (35%)
+- **OpenAI API key setup**: User's own OpenAI API key configured in Replit Secrets as `OPENAI_API_KEY`
+
 ### November 4, 2025 - Intelligent Formula Creation System
 - **Upgraded to dynamic AI formula generation**: Replaced static question flow with intelligent consultant-style interaction
 - **New system prompt**: AI now acts as an expert product formulator creating custom formulas based on user goals
@@ -35,7 +45,7 @@ Preferred communication style: Simple, everyday language.
 ## Replit Environment Setup
 
 **Required Environment Variables:**
-- `VITE_OPENAI_API_KEY`: OpenAI API key for AI-powered conversation (configured in Replit Secrets)
+- `OPENAI_API_KEY`: User's own OpenAI API key for AI-powered conversation (configured in Replit Secrets)
 
 **Development:**
 - Development server runs on port 5000 (host: 0.0.0.0)
@@ -105,14 +115,17 @@ Each step is component-driven with specific input types defined in the Message i
   - Completion flag
 
 **API Key Management:**
-- Currently uses environment variable (`VITE_OPENAI_API_KEY`)
+- Uses environment variable (`OPENAI_API_KEY`) from Replit Secrets
+- User's own OpenAI API key, billed directly to their OpenAI account
 - Note in code indicates this should move to backend for production
 - API calls made directly from browser (security concern noted in comments)
 
 **Conversation Context:**
 - Maintains full message history for contextual responses
 - Formula state passed to API for ingredient-aware dosage recommendations
+- Persona summary generated from user responses (experience, activity, sensitivities, goals) for intelligent dosage calculation
 - Response parsing includes error handling for malformed JSON
+- Dosage validation ensures all AI-recommended values stay within safe database ranges
 
 ### External Dependencies
 
