@@ -13,14 +13,24 @@ interface ChatWindowProps {
 
 const ChatInput: React.FC<{ onSend: (text: string) => void; disabled: boolean }> = ({ onSend, disabled }) => {
   const [input, setInput] = React.useState('');
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && !disabled) {
       onSend(input.trim());
       setInput('');
+      // Auto-focus the input after sending
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
     }
   };
+
+  // Auto-focus on mount
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-gray-50 rounded-2xl border border-gray-200 px-4 py-2.5">
@@ -30,6 +40,7 @@ const ChatInput: React.FC<{ onSend: (text: string) => void; disabled: boolean }>
         </svg>
       </button>
       <input
+        ref={inputRef}
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
