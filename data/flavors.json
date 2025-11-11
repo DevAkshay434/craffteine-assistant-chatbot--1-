@@ -1,0 +1,227 @@
+{
+  "lastUpdated": "2025-11-11T13:25:48.593Z",
+  "count": 22,
+  "maxSelectionsPerFormula": 2,
+  "flavors": [
+    {
+      "id": "mango-flavor-powder",
+      "name": "Mango Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "tropical",
+      "sortOrder": 0
+    },
+    {
+      "id": "sour-cherry-flavor-powder",
+      "name": "Sour Cherry Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 1
+    },
+    {
+      "id": "watermelon-flavor-powder",
+      "name": "Watermelon Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "other",
+      "sortOrder": 2
+    },
+    {
+      "id": "strawberry-banana-flavor-powder",
+      "name": "Strawberry Banana Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "berry",
+      "sortOrder": 3
+    },
+    {
+      "id": "root-beer-flavor-powder",
+      "name": "Root Beer Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "other",
+      "sortOrder": 4
+    },
+    {
+      "id": "green-apple-flavor-powder",
+      "name": "Green Apple Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "other",
+      "sortOrder": 5
+    },
+    {
+      "id": "fruit-punch-flavor-powder",
+      "name": "Fruit Punch Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "tropical",
+      "sortOrder": 6
+    },
+    {
+      "id": "ice-pop-flavor-powder",
+      "name": "Ice Pop Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "other",
+      "sortOrder": 7
+    },
+    {
+      "id": "gummy-bear-flavor-powder",
+      "name": "Gummy Bear Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "candy",
+      "sortOrder": 8
+    },
+    {
+      "id": "blue-raspberry-flavor-powder",
+      "name": "Blue Raspberry Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "berry",
+      "sortOrder": 9
+    },
+    {
+      "id": "pineapple-flavor-powder",
+      "name": "Pineapple Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "tropical",
+      "sortOrder": 10
+    },
+    {
+      "id": "strawberry-sour-flavored-powder",
+      "name": "Strawberry (Sour) Flavored Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "berry",
+      "sortOrder": 11
+    },
+    {
+      "id": "strawberry-flavor-powder",
+      "name": "Strawberry Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "berry",
+      "sortOrder": 12
+    },
+    {
+      "id": "raspberry-flavor-powder",
+      "name": "Raspberry Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "berry",
+      "sortOrder": 13
+    },
+    {
+      "id": "orange-flavor-powder",
+      "name": "Orange Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 14
+    },
+    {
+      "id": "lemon-flavor-powder-natural",
+      "name": "Lemon Flavor Powder - Natural",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 15
+    },
+    {
+      "id": "lime-flavor-powder",
+      "name": "Lime Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 16
+    },
+    {
+      "id": "lemonade-flavor-powder",
+      "name": "Lemonade Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 17
+    },
+    {
+      "id": "cotton-candy-flavor-powder",
+      "name": "Cotton Candy Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "candy",
+      "sortOrder": 18
+    },
+    {
+      "id": "bubble-gum-flavor-powder",
+      "name": "Bubble Gum Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "candy",
+      "sortOrder": 19
+    },
+    {
+      "id": "pink-lemonade-flavor-powder",
+      "name": "Pink Lemonade Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "citrus",
+      "sortOrder": 20
+    },
+    {
+      "id": "coconut-flavor-powder",
+      "name": "Coconut Flavor Powder",
+      "availableFor": [
+        "stickPack"
+      ],
+      "status": "in_stock",
+      "category": "creamy",
+      "sortOrder": 21
+    }
+  ]
+}

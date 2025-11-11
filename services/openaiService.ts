@@ -1,5 +1,6 @@
 import type { Message, Formula } from '../types';
 import ingredientsDB from '../ingredients-database.json';
+import { inventoryService } from './inventoryService';
 
 const API_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -43,9 +44,12 @@ ${ingredientsDB.blends.map(blend => {
    - IF known drink/brand → run MIMIC MODE (research and recreate)
 
 4. Format-specific rules:
-   - **Stick Pack** → ASK about sweetener preference + ≤2 flavors ONLY if user asks
+   - **Stick Pack** → ASK "Want any flavors?" after showing formula. If yes, tell user they can pick ≤2 flavors from the available list (flavor list provided in inventory context below)
    - **Capsule** → SKIP flavors/sweeteners entirely
    - **Pod** → SKIP flavors, allow strength/size options
+   
+**IN-STOCK FLAVORS FOR STICK PACKS:**
+The available flavor list will be provided in a separate inventory context message. Only suggest flavors that appear in that list. Max 2 flavors per formula.
 
 5. Ask for formula name (or accept "Surprise Me" for auto-generated name)
 
@@ -323,12 +327,33 @@ const buildPersonaSummary = (formula: Formula): string => {
     return parts.join('\n');
 };
 
+// Helper to build inventory context for AI
+const buildInventoryContext = (): string => {
+    const flavorList = inventoryService.getFlavorListForPrompt();
+    const summary = inventoryService.getInventorySummary();
+    const maxFlavors = inventoryService.getMaxFlavorSelections();
+    
+    return `**CURRENT INVENTORY STATUS:**
+${summary}
+
+**AVAILABLE FLAVORS (Stick Packs only, max ${maxFlavors}):**
+${flavorList}
+
+Only suggest flavors from this list. If user asks for a flavor not on this list, tell them to email suggest@craffteine.com`;
+};
+
 // Helper to format conversation history for OpenAI
 const formatHistory = (history: Message[], formula: Formula): { role: 'user' | 'assistant' | 'system'; content: string }[] => {
     const formatted: { role: 'user' | 'assistant' | 'system'; content: string }[] = [{
         role: 'system',
         content: systemInstruction
     }];
+    
+    // Add inventory context (flavors and stock status)
+    formatted.push({
+        role: 'system',
+        content: buildInventoryContext()
+    });
     
     // Track which components have been asked
     const componentsAsked = new Set<string>();
