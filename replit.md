@@ -8,6 +8,18 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 
 ## Recent Changes
 
+### November 11, 2025 - Excel Stock List Integration
+- **Automated Excel import**: Created `scripts/import-stock.cjs` to convert Excel files to JSON format
+- **Flavor inventory**: Generated `data/flavors.json` with 22 flavors including categories, status, and format availability
+- **Powder inventory**: Generated `data/powders.json` with 505 water-soluble powder ingredients and status
+- **Inventory service**: Built `services/inventoryService.ts` to manage flavor/powder stock data with helper methods
+- **AI inventory context**: Integrated inventory service with OpenAI - Emma now receives real-time flavor availability (22 flavors) in every conversation
+- **Format-specific filtering**: Flavors automatically filtered for Stick Packs only (max 2 selections), with Capsules and Pods skipping flavors entirely
+- **Dynamic prompt injection**: `buildInventoryContext()` function adds inventory summary and available flavors list as system message
+- **Stock validation ready**: Infrastructure in place for post-response validation of AI-suggested flavors against current inventory
+- **Data structure**: JSON files include lastUpdated timestamp and count for future refresh automation
+- **Efficient prompt management**: 505 powders kept out of prompt (only summary count included) to manage token usage
+
 ### November 11, 2025 - Intelligent Dosage Personalization System
 - **Smart dosage scaling**: OpenAI now calculates personalized ingredient dosages based on user profile instead of always suggesting maximum values
 - **Persona analysis**: System analyzes user's experience level (beginner/moderate/advanced), activity level, sensitivities, medications, and goals
