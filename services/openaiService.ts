@@ -47,7 +47,40 @@ Based on their answers, YOU recommend the best format:
 
 Explain reasoning briefly. For each ingredient included, give a 1-line rationale tied to the user's specific Goal and lifestyle (e.g., "L-Theanine — promotes calm focus, perfect for your morning work routine without jitters").
 
-CRITICAL: When providing ingredient dosages, you MUST use the EXACT min, max, and suggested values from the ingredients database above. The slider ranges MUST match the database ranges exactly. Users can only adjust dosages WITHIN these predefined ranges.
+CRITICAL DOSAGE LOGIC: You MUST intelligently determine the "suggested" dosage for each ingredient based on the user's profile. DO NOT always suggest the maximum value. Use this dosage-scaling rubric:
+
+**Dosage Scaling Based on User Profile:**
+1. **Experience Level:**
+   - Beginner/New to supplements: 40-60% of the range (closer to min)
+   - Some experience/Moderate: 60-80% of the range (middle range)
+   - Experienced/Advanced: 80-100% of the range (closer to max)
+
+2. **Activity Level:**
+   - Sedentary/Low activity: Use lower end of experience-based range
+   - Moderate activity: Use middle of experience-based range  
+   - High activity/Athlete: Use higher end of experience-based range
+
+3. **Sensitivities & Safety:**
+   - If user mentions caffeine sensitivity, stimulant sensitivity, or any health concerns: Reduce stimulants (Caffeine, etc.) to 30-50% of range
+   - If user is taking medications or has allergies: Be conservative, use 40-60% of range
+   - If user mentions any anxiety or sleep issues: Reduce stimulants significantly
+
+4. **Age (if mentioned):**
+   - Younger adults (18-30): Can use standard scaling
+   - Middle age (30-50): Standard to slightly conservative
+   - Older adults (50+): More conservative, 50-70% of range
+
+5. **Goals & Timing:**
+   - Need strong boost: Higher dosages within experience level
+   - Maintenance/daily support: Moderate dosages
+   - Evening/sleep formulas: Lower dosages of actives
+
+**Example Calculations:**
+- User: Beginner, sedentary, wants energy → Caffeine range 50-200mg → Suggest ~75mg (40% of range)
+- User: Experienced, athlete, wants pre-workout → Caffeine range 50-200mg → Suggest ~170mg (85% of range)
+- User: Moderate experience, caffeine sensitive → Caffeine range 50-200mg → Suggest ~65mg (35% of range, overriding experience)
+
+YOU MUST calculate and provide a personalized "suggested" value for each ingredient that reflects the user's specific profile. The min/max values MUST still match the database ranges exactly (for slider bounds), but the "suggested" value should be intelligently calculated.
 
 Respect format constraints:
 - Stick Pack = single-serve powder; keep total dry powder weight and solubility in mind. Suggest total grams and per-serve volume when relevant.
@@ -157,6 +190,78 @@ CRITICAL: Keep ALL responses SHORT - maximum 1-2 lines per message.
 
 Safety fallback: If user asks for illegal or clearly harmful substances or unsafe dosage, refuse that part, explain why, and offer safe alternatives.`;
 
+// Helper to build persona summary for intelligent dosage decisions
+const buildPersonaSummary = (formula: Formula): string => {
+    if (Object.keys(formula).length === 0) return '';
+    
+    const parts: string[] = ['**USER PERSONA SUMMARY FOR DOSAGE CALCULATION:**'];
+    
+    // Experience level (most important for dosage)
+    if (formula.Experience) {
+        const exp = formula.Experience.toLowerCase();
+        if (exp.includes('beginner') || exp.includes('new') || exp.includes('never')) {
+            parts.push('- Experience: BEGINNER → Use 40-60% of dosage range');
+        } else if (exp.includes('experienced') || exp.includes('advanced') || exp.includes('years')) {
+            parts.push('- Experience: ADVANCED → Use 80-100% of dosage range');
+        } else {
+            parts.push('- Experience: MODERATE → Use 60-80% of dosage range');
+        }
+    } else {
+        parts.push('- Experience: UNKNOWN (assume moderate) → Use 60-70% of dosage range');
+    }
+    
+    // Activity level
+    if (formula.Lifestyle || formula.Routine) {
+        const lifestyle = (formula.Lifestyle || '').toLowerCase();
+        const routine = (formula.Routine || '').toLowerCase();
+        const combined = lifestyle + ' ' + routine;
+        
+        if (combined.includes('athlete') || combined.includes('gym') || combined.includes('workout') || combined.includes('active') || combined.includes('exercise')) {
+            parts.push('- Activity: HIGH → Increase dosages within experience range');
+        } else if (combined.includes('sedentary') || combined.includes('desk') || combined.includes('office')) {
+            parts.push('- Activity: LOW → Decrease dosages within experience range');
+        } else {
+            parts.push('- Activity: MODERATE → Standard dosages within experience range');
+        }
+    }
+    
+    // Sensitivities and safety concerns
+    if (formula.Sensitivities) {
+        const sens = formula.Sensitivities.toLowerCase();
+        if (sens.includes('caffeine') || sens.includes('stimulant')) {
+            parts.push('- ALERT: Caffeine/stimulant sensitivity → Reduce stimulants to 30-50% of range');
+        }
+        if (sens.includes('anxiety') || sens.includes('sleep') || sens.includes('jitter')) {
+            parts.push('- ALERT: Anxiety/sleep concerns → Significantly reduce stimulants');
+        }
+        if (sens !== 'none' && sens !== 'no' && sens.length > 3) {
+            parts.push('- Sensitivities present → Use conservative dosages (40-60% of range)');
+        }
+    }
+    
+    // Current medications/supplements
+    if (formula.CurrentSupplements) {
+        const curr = formula.CurrentSupplements.toLowerCase();
+        if (curr.includes('medication') || curr.includes('prescription') || (curr !== 'none' && curr !== 'no' && curr.length > 3)) {
+            parts.push('- Taking other supplements/meds → Be conservative with dosages');
+        }
+    }
+    
+    // Goal-based adjustments
+    if (formula.Goal) {
+        const goal = formula.Goal.toLowerCase();
+        if (goal.includes('energy') || goal.includes('focus') || goal.includes('performance')) {
+            parts.push('- Goal needs strong support → Use higher end within safety limits');
+        } else if (goal.includes('relax') || goal.includes('sleep') || goal.includes('calm')) {
+            parts.push('- Goal is relaxation → Use moderate dosages');
+        }
+    }
+    
+    parts.push('\n**YOU MUST use this persona summary to calculate personalized "suggested" dosages for each ingredient.**');
+    
+    return parts.join('\n');
+};
+
 // Helper to format conversation history for OpenAI
 const formatHistory = (history: Message[], formula: Formula): { role: 'user' | 'assistant' | 'system'; content: string }[] => {
     const formatted: { role: 'user' | 'assistant' | 'system'; content: string }[] = [{
@@ -174,9 +279,12 @@ const formatHistory = (history: Message[], formula: Formula): { role: 'user' | '
             return `${component}: ${typeof value === 'object' ? JSON.stringify(value) : value}`;
         }).join(', ');
         
+        // Build persona summary for dosage decisions
+        const personaSummary = buildPersonaSummary(formula);
+        
         formatted.push({
             role: 'system',
-            content: `Information already collected:\n${formulaSummary}\n\nComponents already asked about: ${Array.from(componentsAsked).join(', ')}\n\nDO NOT ask about these components again. Move to the next step in the conversation flow.`
+            content: `Information already collected:\n${formulaSummary}\n\nComponents already asked about: ${Array.from(componentsAsked).join(', ')}\n\nDO NOT ask about these components again. Move to the next step in the conversation flow.\n\n${personaSummary}`
         });
     }
 
