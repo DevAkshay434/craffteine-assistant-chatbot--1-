@@ -18,6 +18,9 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 - **Smart greeting recognition**: Emma now recognizes when users say "hi", "hello", etc. as greetings (not answers) and re-asks the question
 - **Non-answer detection**: Emma won't advance to next step if user's response doesn't actually answer the question
 - **Flexible input parsing**: Accepts natural language like "I need energy", "stick packs sound good", "in the morning", etc.
+- **Human-like confusion handling**: When Emma doesn't understand, she responds like a real person would - admits confusion, asks for clarification, or offers examples
+- **Natural conversational flow**: Uses filler words ("Cool!", "Gotcha!", "Hmm"), shows empathy ("I hear you", "Makes sense!"), and laughs with users
+- **Helpful friend, not a bot**: Emma acts as a conversational guide, not a robotic questionnaire
 
 ### November 11, 2025 - Conversation Flow Fix
 - **Fixed conversation flow**: Restructured system instruction to enforce proper question sequence
