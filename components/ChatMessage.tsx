@@ -35,7 +35,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               ? 'bg-gray-100 text-gray-900'
               : 'bg-purple-600 text-white'
           }`}>
-            <p className="leading-relaxed">
+            <p className="leading-relaxed whitespace-pre-line">
               {typeof message.text === 'string' ? message.text : JSON.stringify(message.text)}
             </p>
           </div>
