@@ -3,6 +3,7 @@ import ChatWindow from './components/ChatWindow';
 import { getNextStep } from './services/openaiService';
 import { Message, Formula } from './types';
 import { SparklesIcon } from './components/icons/SparklesIcon';
+import emmaAvatar from './assets/emma-avatar.jpg';
 
 // This key is for demonstration. In a production app, this should be handled securely on a backend.
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
@@ -156,46 +157,52 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-transparent p-2">
-      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg border border-purple-200 overflow-hidden flex flex-col">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white flex justify-between items-center">
+    <div className="w-full h-screen flex flex-col bg-white">
+      {/* Header */}
+      <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <SparklesIcon className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-purple-300 shadow-sm">
+              <img src={emmaAvatar} alt="Emma" className="w-full h-full object-cover" />
+            </div>
             <div>
-              <h2 className="text-lg font-bold">Formula Builder</h2>
-              <p className="text-purple-100 text-xs">Personalized for you</p>
+              <h2 className="text-sm font-semibold text-gray-800">Emma - Formula Builder</h2>
+              <p className="text-xs text-gray-500">Personalized wellness consultant</p>
             </div>
           </div>
           {hasStarted && (
             <button
               onClick={resetChat}
-              className="text-white hover:bg-white/20 rounded-full px-3 py-1 text-xs font-semibold transition-colors"
+              className="text-gray-600 hover:text-gray-800 px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
-              Reset
+              New Chat
             </button>
           )}
         </div>
-
-        {!hasStarted ? (
-          <div className="flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-purple-50 to-pink-50">
-            <SparklesIcon className="w-16 h-16 text-purple-500 mb-4" />
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Create Your Formula</h3>
-            <p className="text-gray-600 mb-6 text-sm max-w-sm">
-              Build a personalized wellness formula tailored just for you
-            </p>
-            <button
-              onClick={handleStart}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-200"
-            >
-              Let's create your formula! 💜✨
-            </button>
-          </div>
-        ) : (
-          <div className="h-[500px]">
-            <ChatWindow messages={messages} isTyping={isTyping} onSelection={handleSelection} proceedUrl={proceedUrl} />
-          </div>
-        )}
       </div>
+
+      {/* Chat Area */}
+      {!hasStarted ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gray-50">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center mb-6">
+            <SparklesIcon className="w-8 h-8 text-purple-600" />
+          </div>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-3">Create Your Custom Formula</h3>
+          <p className="text-gray-600 mb-8 text-base max-w-md">
+            Let Emma help you build a personalized wellness formula tailored to your goals
+          </p>
+          <button
+            onClick={handleStart}
+            className="px-8 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 shadow-sm"
+          >
+            Start Chat
+          </button>
+        </div>
+      ) : (
+        <div className="flex-1 overflow-hidden">
+          <ChatWindow messages={messages} isTyping={isTyping} onSelection={handleSelection} proceedUrl={proceedUrl} />
+        </div>
+      )}
     </div>
   );
 };

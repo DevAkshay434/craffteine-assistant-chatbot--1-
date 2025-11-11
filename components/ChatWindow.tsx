@@ -78,28 +78,31 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
-      <div ref={scrollRef} className="flex-grow p-3 space-y-3 overflow-y-auto">
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
-        {isTyping && <TypingIndicator />}
+      {/* Messages Area */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+          {messages.map((msg) => (
+            <ChatMessage key={msg.id} message={msg} />
+          ))}
+          {isTyping && <TypingIndicator />}
+        </div>
       </div>
-      <div className="p-3 border-t border-gray-200 bg-white">
-        {renderInteractiveComponent()}
-        {proceedUrl && (
-             <a
-                href={proceedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 w-full block text-center px-6 py-3 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-bold text-base rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 gradient-animate shimmer"
+      
+      {/* Input Area */}
+      <div className="border-t border-gray-200 bg-white sticky bottom-0">
+        <div className="max-w-3xl mx-auto px-4 py-4">
+          {renderInteractiveComponent()}
+          {proceedUrl && (
+            <a
+              href={proceedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 w-full block text-center px-6 py-3 bg-purple-600 text-white font-semibold text-base rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 shadow-sm"
             >
-                <span className="flex items-center justify-center gap-2">
-                  <span>🎉</span>
-                  <span>Complete Your Order</span>
-                  <span>🎉</span>
-                </span>
+              Complete Your Order →
             </a>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
