@@ -23,21 +23,24 @@ const ChatInput: React.FC<{ onSend: (text: string) => void; disabled: boolean }>
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-gray-50 rounded-2xl border border-gray-200 px-4 py-2.5">
+      <button type="button" className="text-gray-400 hover:text-gray-600 flex-shrink-0">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Type your message..."
+        placeholder="Ask anything"
         disabled={disabled}
-        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="flex-1 bg-transparent focus:outline-none text-gray-800 placeholder-gray-400 disabled:cursor-not-allowed text-sm"
       />
-      <button
-        type="submit"
-        disabled={disabled || !input.trim()}
-        className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-      >
-        Send
+      <button type="submit" disabled={disabled || !input.trim()} className="text-gray-400 hover:text-gray-600 disabled:opacity-30 flex-shrink-0">
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+        </svg>
       </button>
     </form>
   );
@@ -47,7 +50,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessage = messages[messages.length - 1];
   const isLastMessageFromBot = lastMessage?.sender === 'bot';
-  const needsTextInput = isLastMessageFromBot && lastMessage?.inputType === 'text' && lastMessage?.component;
+  const showChatInput = isLastMessageFromBot && lastMessage?.component && !proceedUrl;
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -61,6 +64,23 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
     }
 
     switch(lastMessage.inputType) {
+        case 'options':
+            return (
+                <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                        {lastMessage.options?.map(option => (
+                            <button
+                                key={option}
+                                onClick={() => onSelection(option, lastMessage.component!)}
+                                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm rounded-full border border-gray-300 transition-colors"
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+            
         case 'ingredient_sliders':
             return lastMessage.ingredients ? (
                 <div className="mb-3 max-h-96 overflow-y-auto">
@@ -94,7 +114,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
         <div className="max-w-3xl mx-auto px-4 py-4">
           {renderInteractiveComponent()}
           
-          {needsTextInput && !isTyping && (
+          {showChatInput && !isTyping && (
             <ChatInput 
               onSend={(text) => onSelection(text, lastMessage.component!)} 
               disabled={isTyping}
