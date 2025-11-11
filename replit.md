@@ -15,6 +15,9 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 - **Short punchy messages**: Max 1-2 sentences per response, conversational and friendly
 - **Natural emoji usage**: 1-2 emojis per message as punctuation, not as bullet points
 - **Style rules enforced**: Added critical instructions to prevent structured lists and maintain natural flow
+- **Smart greeting recognition**: Emma now recognizes when users say "hi", "hello", etc. as greetings (not answers) and re-asks the question
+- **Non-answer detection**: Emma won't advance to next step if user's response doesn't actually answer the question
+- **Flexible input parsing**: Accepts natural language like "I need energy", "stick packs sound good", "in the morning", etc.
 
 ### November 11, 2025 - Conversation Flow Fix
 - **Fixed conversation flow**: Restructured system instruction to enforce proper question sequence
