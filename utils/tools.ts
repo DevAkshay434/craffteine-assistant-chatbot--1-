@@ -48,7 +48,7 @@ export const getCurrentDate = (): ToolResult => {
   }
 };
 
-export const getWeather = async (location: string = 'current'): Promise<ToolResult> => {
+export const getWeather = async (location?: string): Promise<ToolResult> => {
   try {
     let latitude = 37.7749;
     let longitude = -122.4194;

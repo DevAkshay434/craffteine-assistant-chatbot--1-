@@ -70,7 +70,7 @@ const functionSchemas = [
 ];
 
 // Helper to execute function calls
-const executeFunctionCall = async (functionName: string, args: any): Promise<string> => {
+const executeFunctionCall = async (functionName: string, args: any = {}): Promise<string> => {
   try {
     switch (functionName) {
       case 'getCurrentTime': {
@@ -82,15 +82,15 @@ const executeFunctionCall = async (functionName: string, args: any): Promise<str
         return result.success ? result.data : result.error || 'Failed to get date';
       }
       case 'getWeather': {
-        const result = await getWeather(args.location);
+        const result = await getWeather(args?.location);
         return result.success ? result.data : result.error || 'Failed to get weather';
       }
       case 'calculate': {
-        const result = calculate(args.expression);
+        const result = calculate(args?.expression || '');
         return result.success ? result.data : result.error || 'Failed to calculate';
       }
       case 'searchWeb': {
-        const result = await searchWeb(args.query);
+        const result = await searchWeb(args?.query || '');
         return result.success ? result.data : result.error || 'Search failed';
       }
       default:

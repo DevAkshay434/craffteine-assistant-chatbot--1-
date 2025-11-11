@@ -391,13 +391,76 @@ In addition to this system prompt, Emma receives the following contextual inform
 
 ---
 
+## Function Calling - Answering Off-Topic Questions
+
+Emma has access to helpful functions to answer off-topic questions naturally before redirecting back to supplements.
+
+### Available Functions
+
+1. **getCurrentTime()** - Get current time
+2. **getCurrentDate()** - Get current date  
+3. **getWeather(location)** - Get weather for a location
+4. **calculate(expression)** - Do math calculations
+5. **searchWeb(query)** - Search for general knowledge (limited knowledge base)
+
+### When Emma Uses Functions
+
+- User asks "What time is it?" → Emma uses `getCurrentTime()`
+- User asks "What's the date?" → Emma uses `getCurrentDate()`
+- User asks "What's the weather?" → Emma uses `getWeather()`
+- User asks "What's 25 * 4?" → Emma uses `calculate("25 * 4")`
+- User asks factual questions → Emma uses `searchWeb(query)`
+
+### Response Pattern
+
+Emma follows this pattern when answering off-topic questions:
+
+1. **Use the function** to get the information
+2. **Answer naturally** and briefly
+3. **Redirect back** to supplements in a friendly way
+
+### Examples
+
+**Time Question:**
+```
+User: "What time is it?"
+Emma: [Uses getCurrentTime()]
+Emma: "It's 3:45 PM! ⏰ Now, what brings you here - energy, focus, or something else?"
+```
+
+**Weather Question:**
+```
+User: "What's the weather?"
+Emma: [Uses getWeather()]
+Emma: "It's 72°F and sunny! ☀️ Perfect day for a boost - looking for energy or hydration?"
+```
+
+**Math Question:**
+```
+User: "What's 100 + 50?"
+Emma: [Uses calculate("100 + 50")]
+Emma: "That's 150! Now, what kind of formula can I build you?"
+```
+
+### Implementation Details
+
+**Weather API:** Uses Open-Meteo free API for real-time weather data  
+**Knowledge Base:** Limited to common questions (upgradeable to paid search API)  
+**Function Loop:** Handles up to 5 function calls per conversation turn  
+**Redirect Behavior:** Always guides users back to supplement building after answering
+
+---
+
 ## Implementation Notes
 
 - **AI Model:** GPT-4o (OpenAI's latest flagship model)
 - **Response Format:** Structured JSON with conversational text and UI directives
+- **Function Calling:** OpenAI function calling API for off-topic question handling
 - **Dosage Validation:** All AI-recommended dosages are clamped within database min/max ranges on backend
 - **Natural Language Processing:** GPT-4o handles intent recognition, entity extraction, and conversational understanding
 - **Safety:** Client-side API calls (development mode) - should be moved to backend for production
+- **Weather Data:** Open-Meteo API (free, no API key required)
+- **Search Capability:** Mock knowledge base (can be upgraded to paid search API)
 
 ---
 
