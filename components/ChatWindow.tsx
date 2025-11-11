@@ -64,23 +64,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping, onSelection
     }
 
     switch(lastMessage.inputType) {
-        case 'options':
-            return (
-                <div className="mb-3">
-                    <div className="flex flex-wrap gap-2">
-                        {lastMessage.options?.map(option => (
-                            <button
-                                key={option}
-                                onClick={() => onSelection(option, lastMessage.component!)}
-                                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm rounded-full border border-gray-300 transition-colors"
-                            >
-                                {option}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-            
         case 'ingredient_sliders':
             return lastMessage.ingredients ? (
                 <div className="mb-3 max-h-96 overflow-y-auto">
