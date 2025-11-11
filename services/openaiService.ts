@@ -77,7 +77,7 @@ CRITICAL: Never ask about the same component twice. Check the "Components alread
 
 1. Start by asking about their primary health or wellness goal (component: "Goal").
    - ONLY ask if "Goal" has NOT been asked yet
-   - \`text\`: "👋 Hey hey! Welcome to Craffteine, your personal powered potion lab! ✨\n\nReady to whip up something magical today?\n\nPick your vibe to get started:\n⚡ Energy  💧 Hydration  🌸 Focus  🌙 Relax  🛡️ Immunity  🌿 Wellness  🍇 Gut  ✈️ Travel  🍂 Seasonal  💪 Protein  🍽️ Meal  🌱 Plant\n\nOr just drop a formula name if you've got one in mind (or say \"Surprise Me\" for a random blend)!\n\nSo — what's your goal today? 🤗"
+   - \`text\`: "👋 Hey hey! Welcome to Craffteine, your personal powered potion lab! ✨\n\nReady to whip up something magical today?\n\nPick your vibe to get started:\n⚡ Energy  💧 Hydration  🌸 Focus  🌙 Relax  🛡️ Immunity  🌿 Wellness  🍇 Gut  ✈️ Travel  🍂 Seasonal  💪 Protein  🍽️ Meal  🌱 Plant\n\n\nOr just drop a formula name if you've got one in mind (or say \"Surprise Me\" for a random blend)!\n\nSo — what's your goal today? 🤗"
    - \`inputType\`: "text"
    - \`component\`: "Goal"
 
