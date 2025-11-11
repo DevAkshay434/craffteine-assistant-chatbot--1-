@@ -1,8 +1,106 @@
 import type { Message, Formula } from '../types';
 import ingredientsDB from '../ingredients-database.json';
 import { inventoryService } from './inventoryService';
+import { getCurrentTime, getCurrentDate, getWeather, calculate, searchWeb } from '../utils/tools';
 
 const API_URL = 'https://api.openai.com/v1/chat/completions';
+
+// Define function schemas for OpenAI function calling
+const functionSchemas = [
+  {
+    name: 'getCurrentTime',
+    description: 'Get the current time. Use this when the user asks what time it is.',
+    parameters: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
+  },
+  {
+    name: 'getCurrentDate',
+    description: 'Get the current date. Use this when the user asks what day it is or what the date is.',
+    parameters: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
+  },
+  {
+    name: 'getWeather',
+    description: 'Get the current weather for a location. Use this when the user asks about weather.',
+    parameters: {
+      type: 'object',
+      properties: {
+        location: {
+          type: 'string',
+          description: 'The city or location to get weather for (e.g., "San Francisco", "New York"). Use "current" if user doesn\'t specify.'
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'calculate',
+    description: 'Perform mathematical calculations. Use this when the user asks to calculate something or asks a math question.',
+    parameters: {
+      type: 'object',
+      properties: {
+        expression: {
+          type: 'string',
+          description: 'The mathematical expression to calculate (e.g., "25 * 4", "100 / 5 + 10")'
+        }
+      },
+      required: ['expression']
+    }
+  },
+  {
+    name: 'searchWeb',
+    description: 'Search for general knowledge information. Use this when the user asks factual questions you don\'t know the answer to.',
+    parameters: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'The search query or question to look up'
+        }
+      },
+      required: ['query']
+    }
+  }
+];
+
+// Helper to execute function calls
+const executeFunctionCall = async (functionName: string, args: any): Promise<string> => {
+  try {
+    switch (functionName) {
+      case 'getCurrentTime': {
+        const result = getCurrentTime();
+        return result.success ? result.data : result.error || 'Failed to get time';
+      }
+      case 'getCurrentDate': {
+        const result = getCurrentDate();
+        return result.success ? result.data : result.error || 'Failed to get date';
+      }
+      case 'getWeather': {
+        const result = await getWeather(args.location);
+        return result.success ? result.data : result.error || 'Failed to get weather';
+      }
+      case 'calculate': {
+        const result = calculate(args.expression);
+        return result.success ? result.data : result.error || 'Failed to calculate';
+      }
+      case 'searchWeb': {
+        const result = await searchWeb(args.query);
+        return result.success ? result.data : result.error || 'Search failed';
+      }
+      default:
+        return `Unknown function: ${functionName}`;
+    }
+  } catch (error) {
+    console.error(`Error executing function ${functionName}:`, error);
+    return `Error executing ${functionName}`;
+  }
+};
 
 // Create ingredients lookup by blend type for easy access
 const ingredientsByBlend = ingredientsDB.ingredients.reduce((acc, ing) => {
@@ -288,7 +386,39 @@ CRITICAL INSTRUCTIONS:
 - Show empathy: "I hear you", "Totally get it", "Makes sense!"
 - Be a helpful friend, not a questionnaire
 
-**Safety fallback:** If user asks for illegal or unsafe substances, politely decline and suggest safe alternatives. Always stay within approved ingredient ranges.`;
+**Safety fallback:** If user asks for illegal or unsafe substances, politely decline and suggest safe alternatives. Always stay within approved ingredient ranges.
+
+**FUNCTION CALLING - ANSWERING OFF-TOPIC QUESTIONS:**
+
+You have access to helpful functions to answer off-topic questions naturally:
+
+**Available Functions:**
+- getCurrentTime() - Get current time
+- getCurrentDate() - Get current date  
+- getWeather(location) - Get weather for a location
+- calculate(expression) - Do math calculations
+- searchWeb(query) - Search for general knowledge
+
+**When to Use Functions:**
+- User asks "What time is it?" → Use getCurrentTime()
+- User asks "What's the date?" → Use getCurrentDate()
+- User asks "What's the weather?" → Use getWeather()
+- User asks "What's 25 * 4?" → Use calculate("25 * 4")
+- User asks factual questions → Use searchWeb(query)
+
+**How to Respond After Using a Function:**
+1. Use the function to get the information
+2. Answer their question naturally and briefly
+3. Redirect back to supplements in a friendly way
+
+**Examples:**
+- User: "What time is it?" → [Use getCurrentTime()] → "It's 3:45 PM! ⏰ Now, what brings you here - energy, focus, or something else?"
+- User: "What's the weather?" → [Use getWeather()] → "It's 72°F and sunny! ☀️ Perfect day for a boost - looking for energy or hydration?"
+- User: "What's 100 + 50?" → [Use calculate("100 + 50")] → "That's 150! Now, what kind of formula can I build you?"
+
+**Important:** After answering off-topic questions, ALWAYS redirect back to supplements. Don't let the conversation drift away from your main purpose - building custom formulas!
+
+**CRITICAL:** When NOT using functions (regular supplement conversation), you MUST respond with valid JSON only. No text outside the JSON object.`;
 
 // Helper to validate and clamp ingredient dosages within database ranges
 const validateIngredientDosages = (ingredients: any[]): any[] => {
@@ -465,60 +595,99 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
         };
     }
     
-    const messages = formatHistory(history, formula);
+    let messages = formatHistory(history, formula);
+    let attemptCount = 0;
+    const maxAttempts = 5;
     
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o',
-                messages: messages,
-                response_format: { type: "json_object" },
-            })
-        });
+        while (attemptCount < maxAttempts) {
+            attemptCount++;
+            
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o',
+                    messages: messages,
+                    functions: functionSchemas,
+                    function_call: 'auto',
+                })
+            });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error('OpenAI API Error:', errorData);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('OpenAI API Error:', errorData);
+                return {
+                    id: 'error',
+                    sender: 'bot',
+                    text: `Sorry, there was an error with the AI service: ${errorData.error.message}`
+                };
+            }
+
+            const data = await response.json();
+            const message = data.choices[0]?.message;
+
+            if (!message) {
+                return { id: 'error', sender: 'bot', text: 'Sorry, I received an empty response.' };
+            }
+
+            if (message.function_call) {
+                const functionName = message.function_call.name;
+                const functionArgs = message.function_call.arguments ? JSON.parse(message.function_call.arguments) : {};
+                
+                console.log(`Emma is calling function: ${functionName}`, functionArgs);
+                
+                const functionResult = await executeFunctionCall(functionName, functionArgs);
+                
+                messages.push({
+                    role: 'assistant',
+                    content: null,
+                    function_call: message.function_call
+                } as any);
+                
+                messages.push({
+                    role: 'function',
+                    name: functionName,
+                    content: functionResult
+                } as any);
+                
+                continue;
+            }
+
+            const content = message.content;
+            if (!content) {
+                return { id: 'error', sender: 'bot', text: 'Sorry, I received an empty response.' };
+            }
+
+            const parsedContent = JSON.parse(content);
+            
+            const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
+            const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
+                ...parsedContent.formulaSummary,
+                ingredients: validateIngredientDosages(parsedContent.formulaSummary.ingredients)
+            } : parsedContent.formulaSummary;
+
             return {
-                id: 'error',
+                id: Date.now().toString(),
                 sender: 'bot',
-                text: `Sorry, there was an error with the AI service: ${errorData.error.message}`
+                text: parsedContent.text || "I'm not sure what to say next!",
+                inputType: parsedContent.inputType,
+                component: parsedContent.component,
+                options: parsedContent.options,
+                sliderConfig: parsedContent.sliderConfig,
+                ingredients: validatedIngredients,
+                isComplete: parsedContent.isComplete,
+                formulaSummary: validatedFormulaSummary,
             };
         }
-
-        const data = await response.json();
-        const content = data.choices[0]?.message?.content;
-
-        if (!content) {
-             return { id: 'error', sender: 'bot', text: 'Sorry, I received an empty response.' };
-        }
-
-        // The response is expected to be a valid JSON string
-        const parsedContent = JSON.parse(content);
         
-        // Validate and clamp ingredient dosages to ensure safety
-        const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
-        const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
-            ...parsedContent.formulaSummary,
-            ingredients: validateIngredientDosages(parsedContent.formulaSummary.ingredients)
-        } : parsedContent.formulaSummary;
-
         return {
-            id: Date.now().toString(),
+            id: 'error',
             sender: 'bot',
-            text: parsedContent.text || "I'm not sure what to say next!",
-            inputType: parsedContent.inputType,
-            component: parsedContent.component,
-            options: parsedContent.options,
-            sliderConfig: parsedContent.sliderConfig,
-            ingredients: validatedIngredients,
-            isComplete: parsedContent.isComplete,
-            formulaSummary: validatedFormulaSummary,
+            text: 'I got stuck in a loop while trying to answer. Let me help with your supplement formula instead!'
         };
 
     } catch (error) {
