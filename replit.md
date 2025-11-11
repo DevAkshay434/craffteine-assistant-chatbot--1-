@@ -13,8 +13,9 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 - **Format question mandatory**: Emma now asks about Format (Stick Pack, Capsule, Pod) as Step 2, right after Goal
 - **Profile questions before dosages**: Emma gathers Routine, Lifestyle, Sensitivities, CurrentSupplements, and Experience before showing formula
 - **Removed conflicting flows**: Eliminated duplicate/contradictory flow instructions that caused Emma to skip questions
-- **Sequential steps**: Flow now follows 11 clear steps: Goal → Format → Routine → Lifestyle → Sensitivities → CurrentSupplements → Experience → Build Formula → Flavors (Stick Pack only) → Formula Name → Finalize
-- **Flavor integration**: Flavors asked at Step 9 (after dosages, only for Stick Pack format)
+- **Sequential steps**: Flow now follows 12 clear steps: Goal → Format → Routine → Lifestyle → Sensitivities → CurrentSupplements → Experience → Build Formula → Sweetener (Stick Pack only) → Flavors (Stick Pack only) → Formula Name → Finalize
+- **Sweetener question**: Added Step 9 asking about natural sweeteners (Stevia, Monk Fruit, Allulose, Erythritol) for Stick Pack format
+- **Flavor integration**: Flavors asked at Step 10 (after sweetener, only for Stick Pack format) with all 22 available flavors listed
 
 ### November 11, 2025 - Excel Stock List Integration
 - **Automated Excel import**: Created `scripts/import-stock.cjs` to convert Excel files to JSON format

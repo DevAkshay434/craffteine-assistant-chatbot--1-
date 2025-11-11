@@ -193,19 +193,26 @@ CRITICAL: Never ask about the same component twice. Check the "Components alread
 
 9. After user confirms dosages (component: "Dosage"), check what Format was selected:
    - Look at the "Information already collected" section for the Format value
-   - IF the Format contains "Stick" or "stick" or "Pack" or "pack" → MANDATORY: Ask about flavors
+   - IF the Format contains "Stick" or "stick" or "Pack" or "pack" → MANDATORY: Ask about sweetener first
+     - ONLY ask if "Sweetener" has NOT been asked yet
+     - \`text\`: "Sweet! 🍭 Want to add a sweetener? We have natural options:\nStevia, Monk Fruit, Allulose, Erythritol\n\nPick one or skip!"
+     - \`inputType\`: "text"
+     - \`component\`: "Sweetener"
+   - IF Format contains "Capsule" or "capsule" or "Pod" or "pod" → Skip sweetener and flavors, go directly to Step 11
+
+10. After sweetener question (for Stick Pack only), ask about flavors:
+   - IF Format is "Stick Pack" → MANDATORY: Ask about flavors
      - ONLY ask if "Flavors" has NOT been asked yet
      - \`text\`: "Awesome! 🎨 Want to add any flavors? You can pick up to 2, or just skip.\n\nAvailable flavors:\nMango, Sour Cherry, Watermelon, Strawberry Banana, Root Beer, Green Apple, Fruit Punch, Ice Pop, Gummy Bear, Blue Raspberry, Pineapple, Strawberry (Sour) Flavored Powder, Strawberry, Raspberry, Orange, Lemon - Natural, Lime, Lemonade, Cotton Candy, Bubble Gum, Pink Lemonade, Coconut"
      - \`inputType\`: "text"
      - \`component\`: "Flavors"
-   - IF Format contains "Capsule" or "capsule" or "Pod" or "pod" → Skip flavors, go directly to Step 10
 
-10. Ask for a custom name with enthusiasm:
+11. Ask for a custom name with enthusiasm:
    - \`text\`: "Love it! 🌟 What would you like to name your custom formula?"
    - \`inputType\`: "text"
    - \`component\`: "FormulaName"
 
-11. Summarize everything with celebration and encouragement, then present the final redirect link.
+12. Summarize everything with celebration and encouragement, then present the final redirect link.
    - \`isComplete\`: true
    - \`text\`: Use brief celebratory language: "Perfect! 🎉 Your '[FormulaName]' is ready! Click below to complete your order 💜✨"
    - \`formulaSummary\`: {
