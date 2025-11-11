@@ -8,6 +8,14 @@ The Craffteine Assistant is an AI-powered chatbot for creating personalized ener
 
 ## Recent Changes
 
+### November 11, 2025 - Natural Language Conversation Style
+- **Natural conversational responses**: Emma now responds like a real person chatting, not with structured/formatted lists
+- **Removed formatted options**: No more "📦 Stick Pack - powder you mix with water 💊 Capsule - traditional pills" style
+- **Integrated natural speech**: Options mentioned naturally in sentences like "Do you want Stick Packs, Capsules, or Pods?"
+- **Short punchy messages**: Max 1-2 sentences per response, conversational and friendly
+- **Natural emoji usage**: 1-2 emojis per message as punctuation, not as bullet points
+- **Style rules enforced**: Added critical instructions to prevent structured lists and maintain natural flow
+
 ### November 11, 2025 - Conversation Flow Fix
 - **Fixed conversation flow**: Restructured system instruction to enforce proper question sequence
 - **Format question mandatory**: Emma now asks about Format (Stick Pack, Capsule, Pod) as Step 2, right after Goal
