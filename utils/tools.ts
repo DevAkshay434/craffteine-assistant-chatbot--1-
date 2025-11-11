@@ -161,34 +161,47 @@ export const calculate = (expression: string): ToolResult => {
 
 export const searchWeb = async (query: string): Promise<ToolResult> => {
   try {
-    const knowledgeBase: Record<string, string> = {
-      'who is the president': 'Joe Biden is the current President of the United States',
-      'what is craffteine': 'Craffteine is a custom supplement company that lets you create personalized energy formulas',
-      'capital of france': 'Paris is the capital of France',
-      'speed of light': 'The speed of light is approximately 299,792,458 meters per second',
-    };
+    const searxngUrl = `https://searx.be/search?q=${encodeURIComponent(query)}&format=json&categories=general`;
     
-    const normalizedQuery = query.toLowerCase().trim();
+    const response = await fetch(searxngUrl, {
+      headers: {
+        'Accept': 'application/json',
+      },
+      signal: AbortSignal.timeout(10000)
+    });
     
-    for (const [key, value] of Object.entries(knowledgeBase)) {
-      if (normalizedQuery.includes(key)) {
-        return {
-          success: true,
-          data: value
-        };
-      }
+    if (!response.ok) {
+      throw new Error(`Search failed with status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.results && data.results.length > 0) {
+      const topResults = data.results.slice(0, 3);
+      const formattedResults = topResults
+        .map((result: any, index: number) => {
+          const title = result.title || 'No title';
+          const snippet = result.content || result.url || 'No description';
+          return `${index + 1}. ${title}\n   ${snippet}`;
+        })
+        .join('\n\n');
+      
+      return {
+        success: true,
+        data: `Search results for "${query}":\n\n${formattedResults}`
+      };
     }
     
     return {
       success: false,
       data: '',
-      error: `I don't have information about "${query}" in my knowledge base. You could upgrade to a paid search API for real-time web search.`
+      error: `No search results found for "${query}"`
     };
   } catch (error) {
     return {
       success: false,
       data: '',
-      error: 'Search failed'
+      error: `Web search temporarily unavailable. Please try again later.`
     };
   }
 };
