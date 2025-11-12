@@ -161,11 +161,22 @@ export const calculate = (expression: string): ToolResult => {
 
 export const searchWeb = async (query: string): Promise<ToolResult> => {
   try {
-    const searxngUrl = `https://searx.be/search?q=${encodeURIComponent(query)}&format=json&categories=general`;
+    const apiKey = import.meta.env.VITE_BRAVE_SEARCH_API_KEY;
     
-    const response = await fetch(searxngUrl, {
+    if (!apiKey) {
+      return {
+        success: false,
+        data: '',
+        error: 'Search API key not configured'
+      };
+    }
+    
+    const braveUrl = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=3`;
+    
+    const response = await fetch(braveUrl, {
       headers: {
         'Accept': 'application/json',
+        'X-Subscription-Token': apiKey
       },
       signal: AbortSignal.timeout(10000)
     });
@@ -176,19 +187,19 @@ export const searchWeb = async (query: string): Promise<ToolResult> => {
     
     const data = await response.json();
     
-    if (data.results && data.results.length > 0) {
-      const topResults = data.results.slice(0, 3);
+    if (data.web?.results && data.web.results.length > 0) {
+      const topResults = data.web.results.slice(0, 3);
       const formattedResults = topResults
         .map((result: any, index: number) => {
           const title = result.title || 'No title';
-          const snippet = result.content || result.url || 'No description';
-          return `${index + 1}. ${title}\n   ${snippet}`;
+          const description = result.description || 'No description';
+          return `${index + 1}. ${title}\n   ${description}`;
         })
         .join('\n\n');
       
       return {
         success: true,
-        data: `Search results for "${query}":\n\n${formattedResults}`
+        data: `${formattedResults}`
       };
     }
     

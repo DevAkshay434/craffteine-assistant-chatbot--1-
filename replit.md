@@ -40,7 +40,7 @@ Inventory data for flavors and powders is managed via JSON files, generated from
 1.  **OpenAI API**: Used for all AI-powered conversational logic, dynamic formula generation, dosage personalization, and function calling.
 2.  **Shopify Integration**: A mock `shopifyService.ts` exists, designed for future integration to fetch customer orders and generate product URLs.
 3.  **Open-Meteo API**: Used for real-time weather data integration via function calling (free, no API key required).
-4.  **SearXNG Web Search**: Free, privacy-focused metasearch engine (via public instance at searx.be) used for general knowledge queries via function calling. Returns top 3 search results from aggregated sources. Note: Public instances may have occasional reliability issues.
+4.  **Brave Search API**: Used for real-time web search queries via function calling. Returns top 3 search results with verified sources. Requires API key stored in `.env` as `VITE_BRAVE_SEARCH_API_KEY`. Free tier includes 2,000 searches/month.
 5.  **Vite**: Build tool and development server for the React application.
 6.  **Tailwind CSS (CDN)**: Used for styling the user interface.
 7.  **React Markdown**: For rendering rich text messages.
