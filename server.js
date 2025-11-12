@@ -18,6 +18,7 @@ app.use(express.json());
 // Serve static files from the dist folder (production build)
 app.use(express.static(join(__dirname, 'dist')));
 
+// API Routes
 app.get('/api/search', async (req, res) => {
   try {
     const { q } = req.query;
@@ -78,8 +79,8 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
-// Serve the React app for all non-API routes
-app.get('*', (req, res) => {
+// Serve the React app for all non-API routes (must be last)
+app.use((req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
