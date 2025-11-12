@@ -29,7 +29,7 @@ The chatbot implements an intelligent, adaptive conversation flow that guides us
 6.  **Formula Naming**: User provides a name for their blend.
 7.  **Finalization**: Summary and redirect URL to Shopify.
 
-The AI dynamically adjusts questions and recommendations based on user input, ensuring a personalized experience. Emma, the AI, acts as a helpful conversational guide, avoiding structured lists and maintaining a natural, human-like interaction style with natural language processing for flexible input parsing and confusion handling.
+The AI dynamically adjusts questions and recommendations based on user input, ensuring a personalized experience. Emma, the AI, acts as a helpful conversational guide, avoiding structured lists and maintaining a natural, human-like interaction style with natural language processing for flexible input parsing and confusion handling. Emma maintains conversation context and can handle casual interruptions (greetings, small talk) while remembering where in the formula-building flow she was, ensuring users don't lose progress.
 
 ### AI and Personalization
 
