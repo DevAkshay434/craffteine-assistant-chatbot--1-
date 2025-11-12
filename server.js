@@ -1,14 +1,22 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the dist folder (production build)
+app.use(express.static(join(__dirname, 'dist')));
 
 app.get('/api/search', async (req, res) => {
   try {
@@ -70,6 +78,12 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
+// Serve the React app for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`🚀 Backend server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📁 Serving frontend from: ${join(__dirname, 'dist')}`);
 });
