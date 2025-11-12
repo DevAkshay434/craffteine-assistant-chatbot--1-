@@ -41,6 +41,16 @@ Emma maintains strict conversation context through a "Prime Directive" system th
 
 The system implements a strict resume protocol after function calls (off-topic questions), ensuring Emma always returns to the same component rather than advancing prematurely.
 
+**Rate Limiting:**
+To prevent OpenAI API rate limit errors (30,000 tokens per minute on free tier), the application implements client-side rate limiting with a 3-second cooldown between messages. When users attempt to send messages too rapidly:
+1. The API call is blocked (no message sent to OpenAI)
+2. A purple cooldown banner appears with countdown: "Hold up—Emma needs a sec (Xs left)"
+3. The input field is disabled with a visual progress bar showing remaining time
+4. After 3 seconds, the input automatically re-enables and the user can continue
+5. The cooldown state is managed via `lastUserRequestAt` ref and `cooldownRemainingMs` state in `App.tsx`
+
+This provides smooth UX while preventing rate limit errors during rapid interactions. The cooldown applies to all user inputs: button clicks, slider adjustments, and free-text messages.
+
 ### AI and Personalization
 
 The system leverages OpenAI's GPT models for dynamic formula generation and intelligent dosage personalization. It analyzes user profiles (experience, activity, sensitivities, medications, goals) to suggest ingredient dosages, applying a dosage rubric (e.g., beginner users receive 40-60% of the range). Safety validation clamps AI-recommended dosages within predefined min/max ranges. The system also integrates function calling to answer off-topic questions (e.g., time, date, weather, calculations, web search) before redirecting back to supplement configuration.
