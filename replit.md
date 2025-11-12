@@ -14,6 +14,10 @@ Preferred communication style: Simple, everyday language.
 
 The frontend is built with React 18 and TypeScript, using Vite for development and bundling. Styling is handled by Tailwind CSS (via CDN). The application employs a modular component structure with clear separation of concerns for `App.tsx`, `ChatWindow`, `ChatMessage`, and various interactive components like `OptionButton`, `MultiSelectOptions`, `RangeSlider`, and `InlineTextInput`. State management primarily uses React hooks (`useState`, `useEffect`, `useRef`) for local state, with `conversationHistoryRef` maintaining chat history for API context.
 
+### Backend Architecture
+
+A lightweight Express.js backend server (`server.js`) runs on port 3001 to securely proxy API requests. This backend handles web search requests to the Brave Search API, preventing API key exposure on the client side and avoiding CORS issues. The backend uses environment variables from `.env` for secure API key storage.
+
 ### Conversation Flow
 
 The chatbot implements an intelligent, adaptive conversation flow that guides users through specific steps:
@@ -40,7 +44,7 @@ Inventory data for flavors and powders is managed via JSON files, generated from
 1.  **OpenAI API**: Used for all AI-powered conversational logic, dynamic formula generation, dosage personalization, and function calling.
 2.  **Shopify Integration**: A mock `shopifyService.ts` exists, designed for future integration to fetch customer orders and generate product URLs.
 3.  **Open-Meteo API**: Used for real-time weather data integration via function calling (free, no API key required).
-4.  **Brave Search API**: Used for real-time web search queries via function calling. Returns top 3 search results with verified sources. Requires API key stored in `.env` as `VITE_BRAVE_SEARCH_API_KEY`. Free tier includes 2,000 searches/month.
+4.  **Brave Search API**: Used for real-time web search queries via function calling through the backend proxy server. Returns top 3 search results with verified sources. Requires API key stored in `.env` as `BRAVE_SEARCH_API_KEY` (backend only, not exposed to frontend). Free tier includes 2,000 searches/month.
 5.  **Vite**: Build tool and development server for the React application.
 6.  **Tailwind CSS (CDN)**: Used for styling the user interface.
 7.  **React Markdown**: For rendering rich text messages.

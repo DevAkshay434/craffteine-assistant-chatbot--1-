@@ -161,22 +161,11 @@ export const calculate = (expression: string): ToolResult => {
 
 export const searchWeb = async (query: string): Promise<ToolResult> => {
   try {
-    const apiKey = import.meta.env.VITE_BRAVE_SEARCH_API_KEY;
+    const backendUrl = `http://localhost:3001/api/search?q=${encodeURIComponent(query)}`;
     
-    if (!apiKey) {
-      return {
-        success: false,
-        data: '',
-        error: 'Search API key not configured'
-      };
-    }
-    
-    const braveUrl = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=3`;
-    
-    const response = await fetch(braveUrl, {
+    const response = await fetch(backendUrl, {
       headers: {
         'Accept': 'application/json',
-        'X-Subscription-Token': apiKey
       },
       signal: AbortSignal.timeout(10000)
     });
@@ -185,28 +174,19 @@ export const searchWeb = async (query: string): Promise<ToolResult> => {
       throw new Error(`Search failed with status: ${response.status}`);
     }
     
-    const data = await response.json();
+    const result = await response.json();
     
-    if (data.web?.results && data.web.results.length > 0) {
-      const topResults = data.web.results.slice(0, 3);
-      const formattedResults = topResults
-        .map((result: any, index: number) => {
-          const title = result.title || 'No title';
-          const description = result.description || 'No description';
-          return `${index + 1}. ${title}\n   ${description}`;
-        })
-        .join('\n\n');
-      
+    if (result.success) {
       return {
         success: true,
-        data: `${formattedResults}`
+        data: result.data
       };
     }
     
     return {
       success: false,
       data: '',
-      error: `No search results found for "${query}"`
+      error: result.error || 'No search results found'
     };
   } catch (error) {
     return {
