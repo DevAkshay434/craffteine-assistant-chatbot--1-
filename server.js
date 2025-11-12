@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -12,14 +13,31 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy: required for rate limiting behind reverse proxies (Render, Cloudflare, etc.)
+// This ensures rate limits apply per-user IP, not per-proxy IP
+app.set('trust proxy', 1);
+
 app.use(cors());
 app.use(express.json());
+
+// Server-side rate limiting: prevent API abuse and protect OpenAI quota
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 20, // Max 20 requests per minute per IP
+  message: { 
+    success: false, 
+    error: 'Too many requests, please wait a moment before trying again',
+    retryAfter: '60 seconds'
+  },
+  standardHeaders: true, // Return rate limit info in RateLimit-* headers
+  legacyHeaders: false, // Disable X-RateLimit-* headers
+});
 
 // Serve static files from the dist folder (production build)
 app.use(express.static(join(__dirname, 'dist')));
 
 // API Routes
-app.get('/api/search', async (req, res) => {
+app.get('/api/search', apiLimiter, async (req, res) => {
   try {
     const { q } = req.query;
     
