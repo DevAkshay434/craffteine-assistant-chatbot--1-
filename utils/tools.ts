@@ -161,7 +161,7 @@ export const calculate = (expression: string): ToolResult => {
 
 export const searchWeb = async (query: string): Promise<ToolResult> => {
   try {
-    const backendUrl = `http://localhost:3001/api/search?q=${encodeURIComponent(query)}`;
+    const backendUrl = `/api/search?q=${encodeURIComponent(query)}`;
     
     const response = await fetch(backendUrl, {
       headers: {
