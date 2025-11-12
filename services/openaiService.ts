@@ -731,6 +731,8 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
             }
 
             let parsedContent;
+            let isPlainText = false;
+            
             try {
                 let cleanContent = content.trim();
                 
@@ -743,15 +745,61 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                 
                 parsedContent = JSON.parse(cleanContent);
             } catch (parseError) {
-                console.error('Failed to parse JSON response:', content);
-                console.error('Parse error:', parseError);
-                return {
-                    id: 'error',
-                    sender: 'bot',
-                    text: 'Hey! 👋 What are you looking for today? Energy, focus, hydration, or something else?',
-                    inputType: 'text',
-                    component: 'Goal'
-                };
+                // Content is plain text, need to request JSON format
+                isPlainText = true;
+            }
+            
+            // If we got plain text instead of JSON, make another API call with JSON format enforced
+            if (isPlainText) {
+                messages.push({
+                    role: 'assistant',
+                    content: content
+                });
+                
+                messages.push({
+                    role: 'system',
+                    content: 'Please reformat your last response as a valid JSON object with these exact fields: text (string), inputType (string), component (string), options (array or null), sliderConfig (object or null), ingredients (array or null), isComplete (boolean), formulaSummary (object or null). Keep the same meaning and content, just change the format to JSON.'
+                });
+                
+                const jsonResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o',
+                        messages: messages,
+                        response_format: { type: "json_object" },
+                    })
+                });
+                
+                if (!jsonResponse.ok) {
+                    console.error('Failed to get JSON format');
+                    return {
+                        id: 'error',
+                        sender: 'bot',
+                        text: 'Hey! 👋 What are you looking for today? Energy, focus, hydration, or something else?',
+                        inputType: 'text',
+                        component: 'Goal'
+                    };
+                }
+                
+                const jsonData = await jsonResponse.json();
+                const jsonMessage = jsonData.choices[0]?.message;
+                
+                if (!jsonMessage?.content) {
+                    continue;
+                }
+                
+                let cleanJsonContent = jsonMessage.content.trim();
+                if (cleanJsonContent.startsWith('```json')) {
+                    cleanJsonContent = cleanJsonContent.replace(/^```json\s*\n?/, '').replace(/\n?```\s*$/, '');
+                } else if (cleanJsonContent.startsWith('```')) {
+                    cleanJsonContent = cleanJsonContent.replace(/^```\s*\n?/, '').replace(/\n?```\s*$/, '');
+                }
+                
+                parsedContent = JSON.parse(cleanJsonContent);
             }
             
             const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
