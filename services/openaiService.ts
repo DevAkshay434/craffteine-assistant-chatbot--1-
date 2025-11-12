@@ -656,6 +656,15 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                     content: functionResult
                 } as any);
                 
+                const messagesWithSystemReminder = [
+                    ...messages.slice(0, 1),
+                    {
+                        role: 'system',
+                        content: 'You must respond in valid JSON format with these fields: text (string), inputType (string), component (string), options (array or null), sliderConfig (object or null), ingredients (array or null), isComplete (boolean), formulaSummary (object or null). Continue the conversation flow based on the current component/step.'
+                    },
+                    ...messages.slice(1)
+                ];
+                
                 const finalResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
@@ -664,7 +673,7 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                     },
                     body: JSON.stringify({
                         model: 'gpt-4o',
-                        messages: messages,
+                        messages: messagesWithSystemReminder,
                         response_format: { type: "json_object" },
                     })
                 });
