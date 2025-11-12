@@ -712,11 +712,33 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                     content: functionResult
                 } as any);
                 
+                // Find the last component Emma was asking about before the function call
+                const lastBotMessage = history[history.length - 2]; // Second to last message (before user's off-topic question)
+                const lastComponent = lastBotMessage?.component || null;
+                
+                const componentsCollected = Object.keys(formula);
+                let resumeInstructions = '';
+                
+                if (lastComponent) {
+                    // Emma was asking about a specific component - continue with THAT component
+                    resumeInstructions = `CRITICAL: The user just asked an off-topic question which you answered. Before they interrupted, you were asking about component "${lastComponent}". You MUST continue asking about "${lastComponent}" - do NOT advance to the next component. Return component: "${lastComponent}" in your JSON response.`;
+                } else if (componentsCollected.length === 0) {
+                    // No components collected yet
+                    resumeInstructions = 'No components collected yet. Ask about "Goal" to find out what they want.';
+                } else {
+                    // Determine next component based on what's collected
+                    resumeInstructions = `Components collected: ${componentsCollected.join(', ')}. Ask about the NEXT missing component in the flow.`;
+                }
+                
                 const messagesWithSystemReminder = [
                     ...messages.slice(0, 1),
                     {
                         role: 'system',
-                        content: 'You must respond in valid JSON format with these fields: text (string), inputType (string), component (string), options (array or null), sliderConfig (object or null), ingredients (array or null), isComplete (boolean), formulaSummary (object or null). Continue the conversation flow based on the current component/step.'
+                        content: `You must respond in valid JSON format with these fields: text (string), inputType (string), component (string), options (array or null), sliderConfig (object or null), ingredients (array or null), isComplete (boolean), formulaSummary (object or null). 
+                        
+${resumeInstructions}
+
+Answer their off-topic question briefly (1 sentence), then immediately continue with the component specified above.`
                     },
                     ...messages.slice(1)
                 ];
