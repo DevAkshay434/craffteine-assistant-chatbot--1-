@@ -8,18 +8,40 @@ import emmaAvatar from './assets/emma-avatar.jpg';
 // This key is for demonstration. In a production app, this should be handled securely on a backend.
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 
+// Rate limiting: prevent rapid-fire messages to avoid OpenAI API rate limits
+const COOLDOWN_MS = 3000; // 3 seconds between messages
+
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [formula, setFormula] = useState<Formula>({});
   const [proceedUrl, setProceedUrl] = useState<string | null>(null);
+  const [cooldownRemainingMs, setCooldownRemainingMs] = useState<number>(0);
 
   const conversationHistoryRef = useRef<Message[]>([]);
+  const lastUserRequestAt = useRef<number>(0);
 
   useEffect(() => {
     conversationHistoryRef.current = messages;
   }, [messages]);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldownRemainingMs > 0) {
+      const timer = setInterval(() => {
+        const elapsed = Date.now() - lastUserRequestAt.current;
+        const remaining = Math.max(0, COOLDOWN_MS - elapsed);
+        setCooldownRemainingMs(remaining);
+        
+        if (remaining === 0) {
+          clearInterval(timer);
+        }
+      }, 100);
+      
+      return () => clearInterval(timer);
+    }
+  }, [cooldownRemainingMs]);
 
   const resetChat = () => {
     setMessages([]);
@@ -27,6 +49,8 @@ const App: React.FC = () => {
     setIsTyping(false);
     setFormula({});
     setProceedUrl(null);
+    setCooldownRemainingMs(0);
+    lastUserRequestAt.current = 0;
   };
 
   const handleStart = async () => {
@@ -57,6 +81,21 @@ const App: React.FC = () => {
   };
   
   const handleSelection = async (value: string | string[], component: string) => {
+    // Rate limiting: check if cooldown period has passed
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastUserRequestAt.current;
+    
+    if (lastUserRequestAt.current > 0 && timeSinceLastRequest < COOLDOWN_MS) {
+      // Don't add a message or call API - just update cooldown state
+      // The UI will show the cooldown banner automatically
+      setCooldownRemainingMs(COOLDOWN_MS - timeSinceLastRequest);
+      return;
+    }
+    
+    // Update last request timestamp
+    lastUserRequestAt.current = now;
+    setCooldownRemainingMs(COOLDOWN_MS);
+    
     // Parse ingredient selections to create visual display
     let selectedIngredients = undefined;
     let userMessageText = Array.isArray(value) ? value.join(', ') : value;
@@ -200,7 +239,13 @@ const App: React.FC = () => {
         </div>
       ) : (
         <div className="flex-1 overflow-hidden">
-          <ChatWindow messages={messages} isTyping={isTyping} onSelection={handleSelection} proceedUrl={proceedUrl} />
+          <ChatWindow 
+            messages={messages} 
+            isTyping={isTyping} 
+            onSelection={handleSelection} 
+            proceedUrl={proceedUrl}
+            cooldownRemainingMs={cooldownRemainingMs}
+          />
         </div>
       )}
     </div>
