@@ -695,7 +695,16 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                     continue;
                 }
                 
-                const parsedContent = JSON.parse(finalMessage.content);
+                let cleanContent = finalMessage.content.trim();
+                
+                // Strip markdown code blocks if present
+                if (cleanContent.startsWith('```json')) {
+                    cleanContent = cleanContent.replace(/^```json\s*\n?/, '').replace(/\n?```\s*$/, '');
+                } else if (cleanContent.startsWith('```')) {
+                    cleanContent = cleanContent.replace(/^```\s*\n?/, '').replace(/\n?```\s*$/, '');
+                }
+                
+                const parsedContent = JSON.parse(cleanContent);
                 const validatedIngredients = parsedContent.ingredients ? validateIngredientDosages(parsedContent.ingredients) : parsedContent.ingredients;
                 const validatedFormulaSummary = parsedContent.formulaSummary?.ingredients ? {
                     ...parsedContent.formulaSummary,
@@ -723,7 +732,16 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
 
             let parsedContent;
             try {
-                parsedContent = JSON.parse(content);
+                let cleanContent = content.trim();
+                
+                // Strip markdown code blocks if present
+                if (cleanContent.startsWith('```json')) {
+                    cleanContent = cleanContent.replace(/^```json\s*\n?/, '').replace(/\n?```\s*$/, '');
+                } else if (cleanContent.startsWith('```')) {
+                    cleanContent = cleanContent.replace(/^```\s*\n?/, '').replace(/\n?```\s*$/, '');
+                }
+                
+                parsedContent = JSON.parse(cleanContent);
             } catch (parseError) {
                 console.error('Failed to parse JSON response:', content);
                 console.error('Parse error:', parseError);
