@@ -746,7 +746,7 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
             attemptCount++;
             
             const requestBody: any = {
-                model: 'gpt-4o',
+                model: 'gpt-4o-mini',
                 messages: messages,
                 functions: functionSchemas,
                 function_call: 'auto',
@@ -836,7 +836,7 @@ IMPORTANT: If you used searchWeb function, include the FULL search results in yo
                         'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o',
+                        model: 'gpt-4o-mini',
                         messages: messagesWithSystemReminder,
                         response_format: { type: "json_object" },
                     })
@@ -932,7 +932,7 @@ IMPORTANT: If you used searchWeb function, include the FULL search results in yo
                         'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o',
+                        model: 'gpt-4o-mini',
                         messages: messages,
                         response_format: { type: "json_object" },
                     })

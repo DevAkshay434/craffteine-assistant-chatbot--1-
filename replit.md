@@ -65,7 +65,7 @@ This provides smooth UX while preventing rate limit errors during rapid interact
 
 ### AI and Personalization
 
-The system leverages OpenAI's GPT models for dynamic formula generation and intelligent dosage personalization. It analyzes user profiles (experience, activity, sensitivities, medications, goals) to suggest ingredient dosages, applying a dosage rubric (e.g., beginner users receive 40-60% of the range). Safety validation clamps AI-recommended dosages within predefined min/max ranges. The system also integrates function calling to answer off-topic questions (e.g., time, date, weather, calculations, web search) before redirecting back to supplement configuration.
+The system leverages OpenAI's **GPT-4o-mini** model for dynamic formula generation and intelligent dosage personalization. This model provides 5x higher rate limits (150,000 tokens/minute vs 30,000) compared to GPT-4o while maintaining excellent performance for conversational tasks. It analyzes user profiles (experience, activity, sensitivities, medications, goals) to suggest ingredient dosages, applying a dosage rubric (e.g., beginner users receive 40-60% of the range). Safety validation clamps AI-recommended dosages within predefined min/max ranges. The system also integrates function calling to answer off-topic questions (e.g., time, date, weather, calculations, web search) before redirecting back to supplement configuration.
 
 ### Data Management
 
