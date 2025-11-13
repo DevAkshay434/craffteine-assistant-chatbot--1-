@@ -5,6 +5,29 @@ import { getCurrentTime, getCurrentDate, getWeather, calculate, searchWeb } from
 
 const API_URL = 'https://api.openai.com/v1/chat/completions';
 
+// Helper to format OpenAI errors into user-friendly messages
+const formatOpenAIError = (errorData: any): string => {
+    const errorMessage = errorData?.error?.message || '';
+    
+    // Rate limit error
+    if (errorMessage.includes('Rate limit reached') || errorMessage.includes('rate_limit_exceeded')) {
+        return "Whoa, slow down! 😅 I need a quick breather. Please wait a few seconds and try again!";
+    }
+    
+    // Quota exceeded
+    if (errorMessage.includes('quota') || errorMessage.includes('insufficient_quota')) {
+        return "Oops, I've hit my daily limit! 😔 Please try again tomorrow or contact support.";
+    }
+    
+    // Invalid API key
+    if (errorMessage.includes('Incorrect API key') || errorMessage.includes('invalid_api_key')) {
+        return "Hmm, there's a configuration issue. Please contact support!";
+    }
+    
+    // Default friendly error
+    return "Sorry, I'm having trouble connecting right now. Please try again in a moment! 💜";
+};
+
 // Define function schemas for OpenAI function calling
 const functionSchemas = [
   {
@@ -744,7 +767,7 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                 return {
                     id: 'error',
                     sender: 'bot',
-                    text: `Sorry, there was an error with the AI service: ${errorData.error.message}`
+                    text: formatOpenAIError(errorData)
                 };
             }
 
@@ -825,7 +848,7 @@ IMPORTANT: If you used searchWeb function, include the FULL search results in yo
                     return {
                         id: 'error',
                         sender: 'bot',
-                        text: `Sorry, there was an error: ${errorData.error.message}`
+                        text: formatOpenAIError(errorData)
                     };
                 }
 

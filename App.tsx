@@ -9,7 +9,7 @@ import emmaAvatar from './assets/emma-avatar.jpg';
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 
 // Rate limiting: prevent rapid-fire messages to avoid OpenAI API rate limits
-const COOLDOWN_MS = 3000; // 3 seconds between messages
+const COOLDOWN_MS = 4000; // 4 seconds between messages (increased to prevent rate limit errors)
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);

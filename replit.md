@@ -42,12 +42,24 @@ Emma maintains strict conversation context through a "Prime Directive" system th
 The system implements a strict resume protocol after function calls (off-topic questions), ensuring Emma always returns to the same component rather than advancing prematurely.
 
 **Rate Limiting:**
-To prevent OpenAI API rate limit errors (30,000 tokens per minute on free tier), the application implements client-side rate limiting with a 3-second cooldown between messages. When users attempt to send messages too rapidly:
+To prevent OpenAI API rate limit errors (30,000 tokens per minute on free tier), the application implements dual-layer rate limiting:
+
+**Client-Side (4-second cooldown):**
+When users attempt to send messages too rapidly:
 1. The API call is blocked (no message sent to OpenAI)
 2. A purple cooldown banner appears with countdown: "Hold up—Emma needs a sec (Xs left)"
 3. The input field is disabled with a visual progress bar showing remaining time
-4. After 3 seconds, the input automatically re-enables and the user can continue
+4. After 4 seconds, the input automatically re-enables and the user can continue
 5. The cooldown state is managed via `lastUserRequestAt` ref and `cooldownRemainingMs` state in `App.tsx`
+
+**Server-Side (20 requests/minute):**
+Backend API routes are protected with `express-rate-limit` middleware (20 requests per minute per IP).
+
+**User-Friendly Error Messages:**
+If rate limits are still exceeded, OpenAI errors are transformed into friendly messages via `formatOpenAIError()`:
+- Rate limit: "Whoa, slow down! 😅 I need a quick breather. Please wait a few seconds and try again!"
+- Quota exceeded: "Oops, I've hit my daily limit! 😔 Please try again tomorrow or contact support."
+- Generic errors: "Sorry, I'm having trouble connecting right now. Please try again in a moment! 💜"
 
 This provides smooth UX while preventing rate limit errors during rapid interactions. The cooldown applies to all user inputs: button clicks, slider adjustments, and free-text messages.
 

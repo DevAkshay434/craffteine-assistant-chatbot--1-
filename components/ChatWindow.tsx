@@ -49,7 +49,7 @@ const ChatInput: React.FC<{
           <div className="w-16 h-1.5 bg-purple-200 rounded-full overflow-hidden">
             <div 
               className="h-full bg-purple-500 transition-all duration-100"
-              style={{ width: `${100 - (cooldownRemainingMs / 3000) * 100}%` }}
+              style={{ width: `${100 - (cooldownRemainingMs / 4000) * 100}%` }}
             />
           </div>
         </div>
