@@ -35,10 +35,16 @@ const ChatInput: React.FC<{
     }
   };
 
-  // Auto-focus on mount
+  // Auto-focus on mount and when input becomes available
   React.useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (!disabled && !isOnCooldown) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [disabled, isOnCooldown]);
 
   return (
     <div>
