@@ -449,7 +449,7 @@ You have access to helpful functions to answer off-topic questions naturally:
 
 **STEP-BY-STEP PROCESS:**
 1. Use the function to get the information
-2. Answer their question in ONE brief sentence (10 words or less)
+2. **IMPORTANT:** For searchWeb results, include the FULL search results in your response. For other functions (time, weather, calculate), answer briefly in 1 sentence.
 3. Look at "Components already asked about" to see what's been collected
 4. Determine which component to ask next based on what's MISSING
 5. Immediately ask that question - NO DELAY, NO RESTART
@@ -470,6 +470,7 @@ You have access to helpful functions to answer off-topic questions naturally:
 - User asks weather BEFORE any components → "It's 72°F! ☀️ What are you looking for - energy, focus, or hydration?" (component: "Goal")
 - User asks weather AFTER Goal collected → "It's 72°F! ☀️ Do you want Stick Packs, Capsules, or Pods?" (component: "Format")
 - User asks time AFTER Goal + Format → "It's 3:45 PM! ⏰ When do you need that boost - morning or afternoon?" (component: "Routine")
+- User asks "what's the news?" → "Here's what I found: [FULL SEARCH RESULTS]. Now, do you want Stick Packs, Capsules, or Pods?" (component: "Format" - shows FULL results)
 - User says "hi" during Routine question → "Hey! 👋 When do you usually need that energy boost?" (component: "Routine" - SAME question)
 
 **REMEMBER:** Your main job is formula building. Off-topic questions are 5-second detours before you get right back to work!
@@ -800,7 +801,7 @@ export const getNextStep = async (apiKey: string, history: Message[], formula: F
                         
 ${resumeInstructions}
 
-Answer their off-topic question briefly (1 sentence), then immediately continue with the component specified above.`
+IMPORTANT: If you used searchWeb function, include the FULL search results in your response so the user sees actual information. For other functions (time, weather, math), answer briefly (1 sentence). Then immediately continue with the component specified above.`
                     },
                     ...messages.slice(1)
                 ];
