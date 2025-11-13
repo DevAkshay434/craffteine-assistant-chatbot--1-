@@ -44,7 +44,7 @@ The system implements a strict resume protocol after function calls (off-topic q
 **Rate Limiting:**
 To prevent OpenAI API rate limit errors (30,000 tokens per minute on free tier), the application implements dual-layer rate limiting:
 
-**Client-Side (4-second cooldown):**
+**Client-Side (4-second cooldown between messages):**
 When users attempt to send messages too rapidly:
 1. The API call is blocked (no message sent to OpenAI)
 2. A purple cooldown banner appears with countdown: "Hold up—Emma needs a sec (Xs left)"
