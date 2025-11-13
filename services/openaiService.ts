@@ -214,6 +214,7 @@ CRITICAL: If the user gives a casual/non-answer response (like "hi", "hello", "h
 
 **Valid vs Invalid Answers:**
 - Goal: Valid = "energy", "focus", "hydration", "sleep", "recovery" | Invalid = "hi", "hello", "idk", "not sure"
+  - Special case: "what do you recommend?" or "surprise me" → Treat as valid, recommend Energy (most popular)
 - Format: Valid = "stick", "capsule", "pod" | Invalid = "hi", "hello", "what?", "idk"
 - Routine: Valid = "morning", "afternoon", "evening", "after workout" | Invalid = "hi", "hello", "idk"
 
@@ -355,6 +356,7 @@ CRITICAL INSTRUCTIONS:
 
 **Examples of natural user input:**
   * "hi" or "hello" or "hey there" or "what's up" → This is JUST A GREETING, NOT an answer. Greet back and re-ask your question.
+  * "what do you recommend?" or "surprise me" or "what's popular?" → Recommend Energy (most popular goal) and say "Most people love our energy blends! Let's build you one 💜"
   * "I need energy" or "looking for a boost" or "energy please" → Goal = Energy
   * "stick packs" or "the powder ones" or "I'll take stick packs" → Format = Stick Pack
   * "morning" or "in the mornings" or "when I wake up" → Routine = morning
