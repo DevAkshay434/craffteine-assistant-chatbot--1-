@@ -293,7 +293,13 @@ CRITICAL INSTRUCTIONS:
    - Make rationales brief (one sentence max) and specific to what they told you
    - IMPORTANT: This must be ONE response that includes both format recommendation AND ingredients
 
-9. After user confirms dosages (component: "Dosage"), check what Format was selected:
+9. **CRITICAL - DOSAGE CONFIRMATION:** When user responds to the Dosage component, they will send a JSON object like {"L-Theanine": 100, "Caffeine": 200}. This means they clicked "Confirm Dosages" and are ready to proceed. When you receive this JSON:
+   - Save it to "Information already collected" → Dosage: [the JSON values]
+   - DO NOT ask to confirm dosages again
+   - Immediately proceed to step 10 based on Format
+   - Only re-ask about dosages if user explicitly says they want to change them later
+   
+10. After receiving dosage confirmation (the JSON object), check what Format was selected:
    - Look at the "Information already collected" section for the Format value
    - IF the Format contains "Stick" or "stick" or "Pack" or "pack" → MANDATORY: Ask about sweetener first
      - ONLY ask if "Sweetener" has NOT been asked yet
@@ -302,9 +308,9 @@ CRITICAL INSTRUCTIONS:
      - \`inputType\`: "text"
      - \`component\`: "Sweetener"
      - DON'T use formatted lists - just mention options naturally in the sentence
-   - IF Format contains "Capsule" or "capsule" or "Pod" or "pod" → Skip sweetener and flavors, go directly to Step 11
+   - IF Format contains "Capsule" or "capsule" or "Pod" or "pod" → Skip sweetener and flavors, go directly to Step 12
 
-10. After sweetener question (for Stick Pack only), ask about flavors:
+11. After sweetener question (for Stick Pack only), ask about flavors:
    - IF Format is "Stick Pack" → MANDATORY: Ask about flavors
      - ONLY ask if "Flavors" has NOT been asked yet
      - Be conversational and mention options naturally
@@ -313,12 +319,12 @@ CRITICAL INSTRUCTIONS:
      - \`component\`: "Flavors"
      - DON'T use line breaks or formatted lists - keep it flowing like natural speech
 
-11. Ask for a custom name with enthusiasm:
+12. Ask for a custom name with enthusiasm:
    - \`text\`: "Love it! 🌟 What would you like to name your custom formula?"
    - \`inputType\`: "text"
    - \`component\`: "FormulaName"
 
-12. Summarize everything with celebration and encouragement, then present the final redirect link.
+13. Summarize everything with celebration and encouragement, then present the final redirect link.
    - \`isComplete\`: true
    - \`text\`: Use brief celebratory language: "Perfect! 🎉 Your '[FormulaName]' is ready! Click below to complete your order 💜✨"
    - \`formulaSummary\`: {
