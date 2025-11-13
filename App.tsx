@@ -11,6 +11,96 @@ const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string;
 // Rate limiting: prevent rapid-fire messages to avoid OpenAI API rate limits
 const COOLDOWN_MS = 4000; // 4 seconds between messages (increased to prevent rate limit errors)
 
+// Normalize user input before saving to formula state
+const normalizeValue = (userValue: string, component: string, previousBotMessage: Message | undefined): string => {
+  const trimmed = userValue.trim().toLowerCase();
+  
+  // List of forbidden phrases that should trigger value extraction
+  const forbiddenPhrases = [
+    'sure', 'yeah', 'great', 'ok', 'yes', 'okay',
+    'any', 'sounds good', 'perfect', 'awesome',
+    'what do you recommend', 'what do you suggest', 'what do you think',
+    'whatever you want', 'up to you', 'you choose', 'you decide',
+    'i don\'t know', 'idk', 'not sure', 'dunno',
+    'surprise me', 'dealer\'s choice', 'your choice'
+  ];
+  
+  // Check if user value is forbidden (exact match or starts/ends with phrase to avoid false positives)
+  const isForbidden = forbiddenPhrases.some(phrase => 
+    trimmed === phrase || 
+    trimmed === phrase + '!' ||
+    trimmed === phrase + '?' ||
+    trimmed.startsWith(phrase + ' ') || 
+    trimmed.endsWith(' ' + phrase)
+  );
+  
+  if (!isForbidden) {
+    // Value is specific, return as-is
+    return userValue.trim();
+  }
+  
+  // Value is forbidden - extract from previous bot message
+  if (!previousBotMessage || !previousBotMessage.text) {
+    return userValue.trim(); // Fallback if no context
+  }
+  
+  const botText = previousBotMessage.text.toLowerCase();
+  
+  // Extract first option based on component
+  switch (component) {
+    case 'Goal':
+      if (botText.includes('energy')) return 'Energy';
+      if (botText.includes('focus')) return 'Focus';
+      if (botText.includes('hydration')) return 'Hydration';
+      if (botText.includes('sleep')) return 'Sleep';
+      if (botText.includes('recovery')) return 'Recovery';
+      break;
+      
+    case 'Format':
+      // Handle both singular and plural forms
+      if (botText.includes('stick pack') || botText.includes('stick-pack')) return 'Stick Pack';
+      if (botText.includes('capsule')) return 'Capsule';
+      if (botText.includes('pod')) return 'Pod';
+      break;
+      
+    case 'Sweetener':
+      if (botText.includes('stevia')) return 'Stevia';
+      if (botText.includes('monk fruit')) return 'Monk Fruit';
+      if (botText.includes('allulose')) return 'Allulose';
+      if (botText.includes('erythritol')) return 'Erythritol';
+      break;
+      
+    case 'Flavors':
+      // Extract first mentioned flavor
+      const flavorMatches = botText.match(/(?:mango|sour cherry|watermelon|strawberry banana|root beer|green apple|fruit punch|ice pop|gummy bear|blue raspberry|pineapple|strawberry|raspberry|orange|lemon|lime|lemonade|cotton candy|bubble gum|pink lemonade|coconut)/i);
+      if (flavorMatches) {
+        // Capitalize properly
+        const flavor = flavorMatches[0];
+        return flavor.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      }
+      break;
+      
+    case 'FormulaName':
+      // Look for Emma's suggestion in quotes or after "How about"
+      const nameMatch = botText.match(/['"]([^'"]+)['"]/);
+      if (nameMatch) return nameMatch[1];
+      
+      const howAboutMatch = botText.match(/how about ([^?]+)/i);
+      if (howAboutMatch) {
+        return howAboutMatch[1].trim().replace(/['"]?$/g, '');
+      }
+      
+      // Generate a default based on Goal if available
+      return 'Energy Boost';
+      
+    default:
+      break;
+  }
+  
+  // Fallback: return original value
+  return userValue.trim();
+};
+
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -126,7 +216,14 @@ const App: React.FC = () => {
       selectedIngredients,
     };
 
-    const newFormula = { ...formula, [component]: value };
+    // Get previous bot message for context
+    const previousBotMessage = messages.length > 0 ? messages[messages.length - 1] : undefined;
+    
+    // Normalize the value before saving (handle both string and array)
+    const valueToNormalize = Array.isArray(value) ? value.join(', ') : value;
+    const normalizedValue = normalizeValue(valueToNormalize, component, previousBotMessage);
+    
+    const newFormula = { ...formula, [component]: normalizedValue };
     setFormula(newFormula);
 
     const currentHistory = [...conversationHistoryRef.current, newUserMessage];
@@ -144,7 +241,8 @@ const App: React.FC = () => {
                 formulaSummary: response.formulaSummary,
             };
 
-            const finalFormula = { ...newFormula, [component]: value };
+            // Use newFormula which already has the normalized value - do NOT override with raw value
+            const finalFormula = { ...newFormula };
             const queryParams = new URLSearchParams();
             
             Object.entries(finalFormula).forEach(([key, val]) => {
