@@ -476,6 +476,68 @@ You have access to helpful functions to answer off-topic questions naturally:
 
 **CRITICAL:** When NOT using functions (regular supplement conversation), you MUST respond with valid JSON only. No text outside the JSON object.`;
 
+// Helper to get the next missing component based on what's already collected
+const getNextMissingComponent = (formula: Formula): { component: string; text: string; inputType: 'text' | 'options' | 'multiselect' | 'slider' | 'ingredient_sliders' | undefined } => {
+    const componentFlow = ['Goal', 'Format', 'Routine', 'Lifestyle', 'Sensitivities', 'CurrentSupplements', 'Experience'];
+    
+    for (const component of componentFlow) {
+        if (!formula[component]) {
+            // Return appropriate question for this component
+            switch (component) {
+                case 'Goal':
+                    return {
+                        component: 'Goal',
+                        text: 'Hey! 👋 What are you looking for today? Energy, focus, hydration, or something else?',
+                        inputType: 'text'
+                    };
+                case 'Format':
+                    return {
+                        component: 'Format',
+                        text: 'Nice! Do you want Stick Packs, Capsules, or Pods?',
+                        inputType: 'text'
+                    };
+                case 'Routine':
+                    return {
+                        component: 'Routine',
+                        text: 'Perfect! When do you usually need that boost - morning, afternoon, or evening?',
+                        inputType: 'text'
+                    };
+                case 'Lifestyle':
+                    return {
+                        component: 'Lifestyle',
+                        text: 'Cool! Are you pretty active, or more of a desk job kind of person?',
+                        inputType: 'text'
+                    };
+                case 'Sensitivities':
+                    return {
+                        component: 'Sensitivities',
+                        text: 'Got it! Any sensitivities I should know about? Caffeine, allergies, anything like that?',
+                        inputType: 'text'
+                    };
+                case 'CurrentSupplements':
+                    return {
+                        component: 'CurrentSupplements',
+                        text: 'Almost done! Taking any other supplements or meds?',
+                        inputType: 'text'
+                    };
+                case 'Experience':
+                    return {
+                        component: 'Experience',
+                        text: 'Last thing - are you new to supplements or pretty experienced with them?',
+                        inputType: 'text'
+                    };
+            }
+        }
+    }
+    
+    // All components collected - shouldn't reach here in normal flow
+    return {
+        component: 'Goal',
+        text: 'Let me help you create your perfect formula! What are you looking for?',
+        inputType: 'text'
+    };
+};
+
 // Helper to validate and clamp ingredient dosages within database ranges
 const validateIngredientDosages = (ingredients: any[]): any[] => {
     if (!ingredients || !Array.isArray(ingredients)) return ingredients;
@@ -853,13 +915,14 @@ Answer their off-topic question briefly (1 sentence), then immediately continue 
                 });
                 
                 if (!jsonResponse.ok) {
-                    console.error('Failed to get JSON format');
+                    console.error('Failed to get JSON format - falling back to next missing component');
+                    const nextStep = getNextMissingComponent(formula);
                     return {
                         id: 'error',
                         sender: 'bot',
-                        text: 'Hey! 👋 What are you looking for today? Energy, focus, hydration, or something else?',
-                        inputType: 'text',
-                        component: 'Goal'
+                        text: nextStep.text,
+                        inputType: nextStep.inputType,
+                        component: nextStep.component
                     };
                 }
                 
